@@ -1,8 +1,8 @@
 {
-  "name": "com.myunitypackage.name",
+  "name": "com.myunitypackage.controller",
   "version": "1.0.0",
-  "displayName": "UnityPackage - Name ",
-  "description": "UnityPackage - Name ",
+  "displayName": "UnityPackage - Controller ",
+  "description": "Package with premade script for Character Controller",
   "unity": "6000.0",
   "dependencies": {},
   "author": {
