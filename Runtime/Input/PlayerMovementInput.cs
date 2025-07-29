@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 namespace MyUnityPackage.Controller
 {
-    [DefaultExecutionOrder(-3)]
+    [DefaultExecutionOrder(-2)]
     public class PlayerMovementInput : MonoBehaviour, PlayerControls.IPlayerMovementActions
     {
         public Vector2 MovementInput { get; private set; }
@@ -56,17 +56,11 @@ namespace MyUnityPackage.Controller
 
         public void OnLook(InputAction.CallbackContext context)
         {
-            if(!context.performed)
-                return;
-
             LookInput = context.ReadValue<Vector2>();
         }
 
         public void OnMovement(InputAction.CallbackContext context)
         {
-            if(!context.performed)
-                return;
-
             MovementInput = context.ReadValue<Vector2>();
         }
 

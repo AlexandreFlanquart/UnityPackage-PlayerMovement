@@ -120,8 +120,6 @@ namespace MyUnityPackage.Controller
                 jumpedLastFrame = true;
             }
             
-
-
             //Lateral
 
             bool isSprinting = playerState.GetPlayerState() == EPlayerState.Sprint;
@@ -161,7 +159,7 @@ namespace MyUnityPackage.Controller
         
             playerTargetRot.x += transform.eulerAngles.x+lookSenseHorizontal*inputManager.LookInput.x;
             transform.rotation = Quaternion.Euler(0,playerTargetRot.x,0);
-
+            print(cameraRotation)  ;
             playerCamera.transform.rotation = Quaternion.Euler(cameraRotation.y,cameraRotation.x,0);
         }
 
