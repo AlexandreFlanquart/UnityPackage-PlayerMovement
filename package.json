@@ -1,0 +1,17 @@
+{
+  "name": "com.myunitypackage.name",
+  "version": "1.0.0",
+  "displayName": "UnityPackage - Name ",
+  "description": "UnityPackage - Name ",
+  "unity": "6000.0",
+  "dependencies": {},
+  "author": {
+    "name": "Alexandre Flanquart"
+  },
+  "contributors": [
+    {
+      "name": "Victor Simon"
+    }
+  ],
+  "_fingerprint": "bd08764d6c556daec82e29ef3bd9406a883988fa"
+}
