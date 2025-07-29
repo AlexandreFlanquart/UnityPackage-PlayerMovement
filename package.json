@@ -16,5 +16,12 @@
       "name": "Victor Simon"
     }
   ],
+  "samples": [
+    {
+      "displayName": "SampleScene",
+      "description": "Exemple scene to show the capacity of the character controller",
+      "path": "Samples~"
+    }
+  ],
   "_fingerprint": "bd08764d6c556daec82e29ef3bd9406a883988fa"
 }
