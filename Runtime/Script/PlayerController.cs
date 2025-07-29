@@ -146,7 +146,7 @@ namespace MyUnityPackage.Controller
             newVelocity = Vector3.ClampMagnitude(new Vector3(newVelocity.x, 0f, newVelocity.z), clampLateralMagnitude);
             newVelocity.y += verticalVelocity;
             newVelocity = !isGrounded ? HandleSteepWalls(newVelocity) : newVelocity;
-
+            //print(newVelocity);
             // Move character (Unity suggests only calling this once per tick)
             characterController.Move(newVelocity * Time.deltaTime);
         

@@ -227,23 +227,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -30, y: 0, z: 0}
---- !u!1 &749383754 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7515732238291740978, guid: 19288c1cab6bfed47a6c7d9a5bba00c0, type: 3}
-  m_PrefabInstance: {fileID: 7767685112458594912}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &749383763
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 749383754}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31ae8221fa60dd2468e928457ee6beb0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1066624843
 GameObject:
   m_ObjectHideFlags: 0
@@ -704,7 +687,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2013787363634535844, guid: 19288c1cab6bfed47a6c7d9a5bba00c0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.26
       objectReference: {fileID: 0}
     - target: {fileID: 2013787363634535844, guid: 19288c1cab6bfed47a6c7d9a5bba00c0, type: 3}
       propertyPath: m_LocalPosition.z
@@ -738,25 +721,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7063398450167280806, guid: 19288c1cab6bfed47a6c7d9a5bba00c0, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 2.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7063398450167280806, guid: 19288c1cab6bfed47a6c7d9a5bba00c0, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -3.6
-      objectReference: {fileID: 0}
     - target: {fileID: 7515732238291740978, guid: 19288c1cab6bfed47a6c7d9a5bba00c0, type: 3}
       propertyPath: m_Name
       value: ThirdPersonController
       objectReference: {fileID: 0}
+    - target: {fileID: 7515732238291740978, guid: 19288c1cab6bfed47a6c7d9a5bba00c0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7515732238291740978, guid: 19288c1cab6bfed47a6c7d9a5bba00c0, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 749383763}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 19288c1cab6bfed47a6c7d9a5bba00c0, type: 3}
 --- !u!1001 &8412651181386838482
 PrefabInstance:
@@ -769,10 +745,6 @@ PrefabInstance:
     - target: {fileID: 2093215991989098109, guid: b8dfa30a7ba34b6428c547f56e0cdc75, type: 3}
       propertyPath: m_Name
       value: FirstPersonController
-      objectReference: {fileID: 0}
-    - target: {fileID: 2093215991989098109, guid: b8dfa30a7ba34b6428c547f56e0cdc75, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3564253931391498829, guid: b8dfa30a7ba34b6428c547f56e0cdc75, type: 3}
       propertyPath: m_LocalPosition.x
