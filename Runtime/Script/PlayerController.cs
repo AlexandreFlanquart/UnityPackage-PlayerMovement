@@ -81,7 +81,7 @@ namespace MyUnityPackage.Controller
             bool isGrounded = IsGrounded();
 
             EPlayerState lateralState = isWalking ? EPlayerState.Walk :
-                                        isSprinting? EPlayerState.Run :
+                                        isSprinting? EPlayerState.Sprint :
                                         isMovingLaterally || isMovementInput? EPlayerState.Run: EPlayerState.Idle;
             playerState.SetPlayerState(lateralState);
 
@@ -141,12 +141,12 @@ namespace MyUnityPackage.Controller
             // Add drag to player
             float dragMagnitude = isGrounded ? drag : inAirDrag;
             Vector3 currentDrag = newVelocity.normalized * dragMagnitude * Time.deltaTime;
-            //Debug.Log("New Veloc" + newVelocity);
+
             newVelocity = (newVelocity.magnitude > dragMagnitude * Time.deltaTime) ? newVelocity - currentDrag : Vector3.zero;
             newVelocity = Vector3.ClampMagnitude(new Vector3(newVelocity.x, 0f, newVelocity.z), clampLateralMagnitude);
             newVelocity.y += verticalVelocity;
             newVelocity = !isGrounded ? HandleSteepWalls(newVelocity) : newVelocity;
-            //Debug.Log("New Veloc" + newVelocity);
+
             // Move character (Unity suggests only calling this once per tick)
             characterController.Move(newVelocity * Time.deltaTime);
         
@@ -159,7 +159,7 @@ namespace MyUnityPackage.Controller
         
             playerTargetRot.x += transform.eulerAngles.x+lookSenseHorizontal*inputManager.LookInput.x;
             transform.rotation = Quaternion.Euler(0,playerTargetRot.x,0);
-            print(cameraRotation)  ;
+
             playerCamera.transform.rotation = Quaternion.Euler(cameraRotation.y,cameraRotation.x,0);
         }
 

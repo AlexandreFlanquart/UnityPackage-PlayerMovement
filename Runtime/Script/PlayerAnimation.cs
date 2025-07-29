@@ -45,7 +45,7 @@ namespace MyUnityPackage.Controller
             bool isGrounded = playerState.IsGrounded();
 
             Vector2 input = isSprinting ? inputManager.MovementInput*1.5f:inputManager.MovementInput;
-            currentValue = Vector3.Lerp(currentValue, input, blendSpeed*Time.deltaTime);
+            currentValue = Vector3.Lerp(currentValue, input, blendSpeed);
 
             animator.SetBool(isGroundedHash, isGrounded);
             animator.SetBool(isFallingHash,isFalling);

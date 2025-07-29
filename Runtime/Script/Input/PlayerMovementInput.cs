@@ -67,9 +67,14 @@ namespace MyUnityPackage.Controller
         public void OnSprint(InputAction.CallbackContext context)
         {
             if(context.performed)
+            {
                 IsSprinting = true;
+                print("IsSprinting"  + IsSprinting );
+            }
+                
             else if(context.canceled)
                 IsSprinting = false;
+            
         }
     }
 }
