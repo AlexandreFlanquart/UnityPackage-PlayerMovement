@@ -5,13 +5,19 @@ using UnityEngine.InputSystem;
 namespace MyUnityPackage.Controller
 {
     [DefaultExecutionOrder(-2)]
-    public class PlayerMovementInput : MonoBehaviour, PlayerControls.IPlayerMovementActions
+    public class PlayerMovementInput : MonoBehaviour,IPlayerMovement, PlayerControls.IPlayerMovementActions
     {
-        public Vector2 MovementInput { get; private set; }
-        public Vector2 LookInput { get; private set; }
-        public bool IsCrounching { get; private set; }
-        public bool JumpPressed { get; private set; }
-        public bool IsSprinting { get; private set; }
+        public Vector2 MovementInput { get => movementInput;  set => movementInput = value; }
+        public Vector2 LookInput { get => lookInput;  set => lookInput = value; }
+        public bool IsCrounching { get => isCrounching;  set => isCrounching = value; }
+        public bool JumpPressed { get => jumpPressed;  set => jumpPressed = value; }
+        public bool IsSprinting { get => isSprinting;  set => isSprinting = value; }
+
+        private Vector2 movementInput ;
+        private Vector2 lookInput ;
+        private bool isCrounching ;
+        private bool jumpPressed ;
+        private bool isSprinting ;
 
         void LateUpdate()
         {
@@ -67,11 +73,7 @@ namespace MyUnityPackage.Controller
         public void OnSprint(InputAction.CallbackContext context)
         {
             if(context.performed)
-            {
                 IsSprinting = true;
-                print("IsSprinting"  + IsSprinting );
-            }
-                
             else if(context.canceled)
                 IsSprinting = false;
             

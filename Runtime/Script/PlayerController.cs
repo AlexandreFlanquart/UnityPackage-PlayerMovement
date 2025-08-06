@@ -9,7 +9,7 @@ namespace MyUnityPackage.Controller
     [DefaultExecutionOrder(-1)]
     [RequireComponent(typeof(PlayerState))]
     [RequireComponent(typeof(PlayerAnimation))]
-    [RequireComponent(typeof(PlayerMovementInput))]
+    //[RequireComponent(typeof(PlayerMovementInput))]
     public class PlayerController : MonoBehaviour
     {
 
@@ -17,7 +17,7 @@ namespace MyUnityPackage.Controller
 
         [SerializeField] private Camera playerCamera;
         private PlayerState playerState;
-        private PlayerMovementInput inputManager;
+        private IPlayerMovement/*PlayerMovementInput*/ inputManager;
         private CharacterController characterController;
 
         [Header("Variable")]
@@ -52,7 +52,7 @@ namespace MyUnityPackage.Controller
         [SerializeField] private LayerMask groundLayer; 
         void Awake()
         {
-            inputManager = GetComponent<PlayerMovementInput>();
+            inputManager = GetComponent<IPlayerMovement>/*PlayerMovementInput>*/();
             playerState = GetComponent<PlayerState>();
             characterController = GetComponent<CharacterController>();   
         

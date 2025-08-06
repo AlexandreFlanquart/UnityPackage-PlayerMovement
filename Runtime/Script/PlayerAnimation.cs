@@ -9,7 +9,7 @@ namespace MyUnityPackage.Controller
         [SerializeField] private Animator animator;
         [SerializeField]private float blendSpeed = 0.02f;
 
-        private PlayerMovementInput inputManager;
+        private IPlayerMovement/*PlayerMovementInput*/ inputManager;
         private PlayerState playerState;
 
         private static int inputXHash = Animator.StringToHash("InputX");
@@ -27,7 +27,7 @@ namespace MyUnityPackage.Controller
         {
             playerState = GetComponent<PlayerState>();
             animator = GetComponent<Animator>();
-            inputManager = GetComponent<PlayerMovementInput>();
+            inputManager = GetComponent<IPlayerMovement/*PlayerMovementInput*/>();
         }
 
         void Update()
