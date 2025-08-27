@@ -17,7 +17,7 @@ namespace MyUnityPackage.Controller
 
         [SerializeField] private Camera playerCamera;
         private PlayerState playerState;
-        private IPlayerMovement/*PlayerMovementInput*/ inputManager;
+        private  IPlayerMovement/*PlayerMovementInput*/ inputManager;
         private CharacterController characterController;
 
         [Header("Variable")]
@@ -193,7 +193,6 @@ namespace MyUnityPackage.Controller
         {
             Vector3 normal = CharacterControllerUtils.GetNormalWithSphereCast(characterController,groundLayer);
             float angle = Vector3.Angle(normal,Vector3.up);
-            print("Airborne "  + angle);
             bool validAngle = angle <= characterController.slopeLimit;
             return characterController.isGrounded && validAngle;
         }
