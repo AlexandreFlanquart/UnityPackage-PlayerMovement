@@ -1,7 +1,20 @@
 # MYUNITYPACKAGE-CONTROLLER
-Package for Unity.
 
-<br>
+## About
+MyUnityPackage Controller is a Unity package who allow you to use premade controller :
+- A prefab 1st person controller
+- A prefab 3rd person controller 
+- A prefab to switch between 1st et 3rd person controller
+
+This package grant you a good modularity with the adaptibility of the PlayerActionsInput.
+
+## What's New
+To see the last update of the package check [here](CHANGELOG.md) !
+
+## How to use
+If you want to use this package without changing the model, you can just drop the prefab you want in your scene.
+But if you want to change the model you can drop the prefab in your scene and you can unprefab to adapt the model to your needs.</br>
+Like we said in the [about](#about) section due to each Actions Maps are managed by each their script, so you can adapt each of your map with a personnalised script !
 
 ## 📦 How to install in Unity
 This guide explains how to install this Unity package using the **Unity Package Manager**.
