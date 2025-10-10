@@ -1072,6 +1072,223 @@ namespace MyUnityPackage.Controller
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Vehicle"",
+            ""id"": ""eb3c578c-6fdb-4a3f-b62e-7a85594c5717"",
+            ""actions"": [
+                {
+                    ""name"": ""Movement"",
+                    ""type"": ""Value"",
+                    ""id"": ""76d3ffb2-47c9-49f1-9fd5-881be404c282"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Drifting"",
+                    ""type"": ""Button"",
+                    ""id"": ""26316cc4-031d-452f-b2e0-6d38ad5c3e7a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Klaxon"",
+                    ""type"": ""Button"",
+                    ""id"": ""8568a591-4543-4a9d-80e6-080a76ca201e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""8dd709b1-943b-434b-8eaa-c859e758164c"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""WASD"",
+                    ""id"": ""c56c26bd-3dd7-4469-bd40-a82788b5a00d"",
+                    ""path"": ""Dpad"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""f50437b4-dcdf-4c60-9654-333375544e7c"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""a5e39548-5cd3-4875-8bf0-bf8e29884419"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""f8b60996-6904-436a-8936-9be53271c085"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""657b6bfd-e8fa-4d03-a9d7-84be1275dae1"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""d144e549-72aa-47cf-ae2b-7fc379798676"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""b97c3311-4df1-4977-8f8c-629dd2492e03"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""3c92527a-e02e-4028-b858-7c5c7397ea7a"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""0b76a5f1-b82e-4037-9bc6-01f8e5e96736"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4a4ef2a5-e627-4880-9bb9-3fa4fa35dce0"",
+                    ""path"": ""<XRController>/{Primary2DAxis}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XR"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""710fb8e2-664b-47ff-99e5-7ddc1aa8d657"",
+                    ""path"": ""<Joystick>/stick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Joystick"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d788fc9d-7dbe-48e5-a2bd-85fe0f2a1e17"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Drifting"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f5402929-fef9-4158-aa8c-d4aebf6dccc5"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Klaxon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""VehicleRide"",
+            ""id"": ""63dbc616-c18e-4f80-8cb0-1ce94092fe83"",
+            ""actions"": [
+                {
+                    ""name"": ""Inside"",
+                    ""type"": ""Button"",
+                    ""id"": ""9cdba3f7-4329-4a21-a1c4-b933d2d19700"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""77e2b723-06e0-4cb1-863a-81a576b692c1"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Inside"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -1164,6 +1381,14 @@ namespace MyUnityPackage.Controller
             m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
             m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
             m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+            // Vehicle
+            m_Vehicle = asset.FindActionMap("Vehicle", throwIfNotFound: true);
+            m_Vehicle_Movement = m_Vehicle.FindAction("Movement", throwIfNotFound: true);
+            m_Vehicle_Drifting = m_Vehicle.FindAction("Drifting", throwIfNotFound: true);
+            m_Vehicle_Klaxon = m_Vehicle.FindAction("Klaxon", throwIfNotFound: true);
+            // VehicleRide
+            m_VehicleRide = asset.FindActionMap("VehicleRide", throwIfNotFound: true);
+            m_VehicleRide_Inside = m_VehicleRide.FindAction("Inside", throwIfNotFound: true);
         }
 
         ~@PlayerControls()
@@ -1172,6 +1397,8 @@ namespace MyUnityPackage.Controller
             UnityEngine.Debug.Assert(!m_PlayerActions.enabled, "This will cause a leak and performance issues, PlayerControls.PlayerActions.Disable() has not been called.");
             UnityEngine.Debug.Assert(!m_ThirdPerson.enabled, "This will cause a leak and performance issues, PlayerControls.ThirdPerson.Disable() has not been called.");
             UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, PlayerControls.UI.Disable() has not been called.");
+            UnityEngine.Debug.Assert(!m_Vehicle.enabled, "This will cause a leak and performance issues, PlayerControls.Vehicle.Disable() has not been called.");
+            UnityEngine.Debug.Assert(!m_VehicleRide.enabled, "This will cause a leak and performance issues, PlayerControls.VehicleRide.Disable() has not been called.");
         }
 
         /// <summary>
@@ -1792,6 +2019,220 @@ namespace MyUnityPackage.Controller
         /// Provides a new <see cref="UIActions" /> instance referencing this action map.
         /// </summary>
         public UIActions @UI => new UIActions(this);
+
+        // Vehicle
+        private readonly InputActionMap m_Vehicle;
+        private List<IVehicleActions> m_VehicleActionsCallbackInterfaces = new List<IVehicleActions>();
+        private readonly InputAction m_Vehicle_Movement;
+        private readonly InputAction m_Vehicle_Drifting;
+        private readonly InputAction m_Vehicle_Klaxon;
+        /// <summary>
+        /// Provides access to input actions defined in input action map "Vehicle".
+        /// </summary>
+        public struct VehicleActions
+        {
+            private @PlayerControls m_Wrapper;
+
+            /// <summary>
+            /// Construct a new instance of the input action map wrapper class.
+            /// </summary>
+            public VehicleActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+            /// <summary>
+            /// Provides access to the underlying input action "Vehicle/Movement".
+            /// </summary>
+            public InputAction @Movement => m_Wrapper.m_Vehicle_Movement;
+            /// <summary>
+            /// Provides access to the underlying input action "Vehicle/Drifting".
+            /// </summary>
+            public InputAction @Drifting => m_Wrapper.m_Vehicle_Drifting;
+            /// <summary>
+            /// Provides access to the underlying input action "Vehicle/Klaxon".
+            /// </summary>
+            public InputAction @Klaxon => m_Wrapper.m_Vehicle_Klaxon;
+            /// <summary>
+            /// Provides access to the underlying input action map instance.
+            /// </summary>
+            public InputActionMap Get() { return m_Wrapper.m_Vehicle; }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+            public void Enable() { Get().Enable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+            public void Disable() { Get().Disable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+            public bool enabled => Get().enabled;
+            /// <summary>
+            /// Implicitly converts an <see ref="VehicleActions" /> to an <see ref="InputActionMap" /> instance.
+            /// </summary>
+            public static implicit operator InputActionMap(VehicleActions set) { return set.Get(); }
+            /// <summary>
+            /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <param name="instance">Callback instance.</param>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+            /// </remarks>
+            /// <seealso cref="VehicleActions" />
+            public void AddCallbacks(IVehicleActions instance)
+            {
+                if (instance == null || m_Wrapper.m_VehicleActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_VehicleActionsCallbackInterfaces.Add(instance);
+                @Movement.started += instance.OnMovement;
+                @Movement.performed += instance.OnMovement;
+                @Movement.canceled += instance.OnMovement;
+                @Drifting.started += instance.OnDrifting;
+                @Drifting.performed += instance.OnDrifting;
+                @Drifting.canceled += instance.OnDrifting;
+                @Klaxon.started += instance.OnKlaxon;
+                @Klaxon.performed += instance.OnKlaxon;
+                @Klaxon.canceled += instance.OnKlaxon;
+            }
+
+            /// <summary>
+            /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <remarks>
+            /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+            /// </remarks>
+            /// <seealso cref="VehicleActions" />
+            private void UnregisterCallbacks(IVehicleActions instance)
+            {
+                @Movement.started -= instance.OnMovement;
+                @Movement.performed -= instance.OnMovement;
+                @Movement.canceled -= instance.OnMovement;
+                @Drifting.started -= instance.OnDrifting;
+                @Drifting.performed -= instance.OnDrifting;
+                @Drifting.canceled -= instance.OnDrifting;
+                @Klaxon.started -= instance.OnKlaxon;
+                @Klaxon.performed -= instance.OnKlaxon;
+                @Klaxon.canceled -= instance.OnKlaxon;
+            }
+
+            /// <summary>
+            /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="VehicleActions.UnregisterCallbacks(IVehicleActions)" />.
+            /// </summary>
+            /// <seealso cref="VehicleActions.UnregisterCallbacks(IVehicleActions)" />
+            public void RemoveCallbacks(IVehicleActions instance)
+            {
+                if (m_Wrapper.m_VehicleActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            /// <summary>
+            /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+            /// </summary>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+            /// </remarks>
+            /// <seealso cref="VehicleActions.AddCallbacks(IVehicleActions)" />
+            /// <seealso cref="VehicleActions.RemoveCallbacks(IVehicleActions)" />
+            /// <seealso cref="VehicleActions.UnregisterCallbacks(IVehicleActions)" />
+            public void SetCallbacks(IVehicleActions instance)
+            {
+                foreach (var item in m_Wrapper.m_VehicleActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_VehicleActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        /// <summary>
+        /// Provides a new <see cref="VehicleActions" /> instance referencing this action map.
+        /// </summary>
+        public VehicleActions @Vehicle => new VehicleActions(this);
+
+        // VehicleRide
+        private readonly InputActionMap m_VehicleRide;
+        private List<IVehicleRideActions> m_VehicleRideActionsCallbackInterfaces = new List<IVehicleRideActions>();
+        private readonly InputAction m_VehicleRide_Inside;
+        /// <summary>
+        /// Provides access to input actions defined in input action map "VehicleRide".
+        /// </summary>
+        public struct VehicleRideActions
+        {
+            private @PlayerControls m_Wrapper;
+
+            /// <summary>
+            /// Construct a new instance of the input action map wrapper class.
+            /// </summary>
+            public VehicleRideActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+            /// <summary>
+            /// Provides access to the underlying input action "VehicleRide/Inside".
+            /// </summary>
+            public InputAction @Inside => m_Wrapper.m_VehicleRide_Inside;
+            /// <summary>
+            /// Provides access to the underlying input action map instance.
+            /// </summary>
+            public InputActionMap Get() { return m_Wrapper.m_VehicleRide; }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+            public void Enable() { Get().Enable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+            public void Disable() { Get().Disable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+            public bool enabled => Get().enabled;
+            /// <summary>
+            /// Implicitly converts an <see ref="VehicleRideActions" /> to an <see ref="InputActionMap" /> instance.
+            /// </summary>
+            public static implicit operator InputActionMap(VehicleRideActions set) { return set.Get(); }
+            /// <summary>
+            /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <param name="instance">Callback instance.</param>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+            /// </remarks>
+            /// <seealso cref="VehicleRideActions" />
+            public void AddCallbacks(IVehicleRideActions instance)
+            {
+                if (instance == null || m_Wrapper.m_VehicleRideActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_VehicleRideActionsCallbackInterfaces.Add(instance);
+                @Inside.started += instance.OnInside;
+                @Inside.performed += instance.OnInside;
+                @Inside.canceled += instance.OnInside;
+            }
+
+            /// <summary>
+            /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <remarks>
+            /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+            /// </remarks>
+            /// <seealso cref="VehicleRideActions" />
+            private void UnregisterCallbacks(IVehicleRideActions instance)
+            {
+                @Inside.started -= instance.OnInside;
+                @Inside.performed -= instance.OnInside;
+                @Inside.canceled -= instance.OnInside;
+            }
+
+            /// <summary>
+            /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="VehicleRideActions.UnregisterCallbacks(IVehicleRideActions)" />.
+            /// </summary>
+            /// <seealso cref="VehicleRideActions.UnregisterCallbacks(IVehicleRideActions)" />
+            public void RemoveCallbacks(IVehicleRideActions instance)
+            {
+                if (m_Wrapper.m_VehicleRideActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            /// <summary>
+            /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+            /// </summary>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+            /// </remarks>
+            /// <seealso cref="VehicleRideActions.AddCallbacks(IVehicleRideActions)" />
+            /// <seealso cref="VehicleRideActions.RemoveCallbacks(IVehicleRideActions)" />
+            /// <seealso cref="VehicleRideActions.UnregisterCallbacks(IVehicleRideActions)" />
+            public void SetCallbacks(IVehicleRideActions instance)
+            {
+                foreach (var item in m_Wrapper.m_VehicleRideActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_VehicleRideActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        /// <summary>
+        /// Provides a new <see cref="VehicleRideActions" /> instance referencing this action map.
+        /// </summary>
+        public VehicleRideActions @VehicleRide => new VehicleRideActions(this);
         private int m_KeyboardMouseSchemeIndex = -1;
         /// <summary>
         /// Provides access to the input control scheme.
@@ -2021,6 +2462,50 @@ namespace MyUnityPackage.Controller
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
+        }
+        /// <summary>
+        /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Vehicle" which allows adding and removing callbacks.
+        /// </summary>
+        /// <seealso cref="VehicleActions.AddCallbacks(IVehicleActions)" />
+        /// <seealso cref="VehicleActions.RemoveCallbacks(IVehicleActions)" />
+        public interface IVehicleActions
+        {
+            /// <summary>
+            /// Method invoked when associated input action "Movement" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnMovement(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Drifting" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnDrifting(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Klaxon" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnKlaxon(InputAction.CallbackContext context);
+        }
+        /// <summary>
+        /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "VehicleRide" which allows adding and removing callbacks.
+        /// </summary>
+        /// <seealso cref="VehicleRideActions.AddCallbacks(IVehicleRideActions)" />
+        /// <seealso cref="VehicleRideActions.RemoveCallbacks(IVehicleRideActions)" />
+        public interface IVehicleRideActions
+        {
+            /// <summary>
+            /// Method invoked when associated input action "Inside" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnInside(InputAction.CallbackContext context);
         }
     }
 }

@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
 namespace MyUnityPackage.Controller
 {
     [DefaultExecutionOrder(-2)]
