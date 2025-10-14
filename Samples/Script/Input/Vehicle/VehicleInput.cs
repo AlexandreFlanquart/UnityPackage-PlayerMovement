@@ -13,6 +13,7 @@ public class VehicleInput : MonoBehaviour,PlayerControls.IVehicleActions,IVehicl
     public bool IsDrifting { get => isDrifting; set => isDrifting =  value; }
     public Action<bool> OnKlaxonAction { get; set; }
     public Action<bool> OnDriftAction { get ; set; }
+    public Action OnHeadLightAction { get ; set; }
 
     private bool isDrifting ;
 
@@ -66,6 +67,13 @@ public class VehicleInput : MonoBehaviour,PlayerControls.IVehicleActions,IVehicl
             OnKlaxonAction?.Invoke(true);
         else if (context.canceled  )
             OnKlaxonAction?.Invoke(false);
+    }
+
+    public void OnHeadLight(InputAction.CallbackContext context)
+    {
+        if(context.performed)
+            OnHeadLightAction?.Invoke();
+
     }
 }
 

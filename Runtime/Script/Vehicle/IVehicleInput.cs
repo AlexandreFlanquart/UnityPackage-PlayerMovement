@@ -11,6 +11,7 @@ namespace MyUnityPackage.Controller
 
         public Action<bool> OnKlaxonAction { get; set;}
         public Action<bool> OnDriftAction { get; set;}
+        public Action OnHeadLightAction { get; set;}
         public void EnableVehicleInput();
         public void DisableVehicleInput();
     }

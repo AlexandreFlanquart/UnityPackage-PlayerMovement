@@ -1103,6 +1103,15 @@ namespace MyUnityPackage.Controller
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""HeadLight"",
+                    ""type"": ""Button"",
+                    ""id"": ""aa3fd99a-da3d-442a-a6b3-d761db2d3f17"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1259,6 +1268,17 @@ namespace MyUnityPackage.Controller
                     ""action"": ""Klaxon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ddeb3cb2-8f5a-4a34-a5e1-5aaabdcbb060"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HeadLight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -1386,6 +1406,7 @@ namespace MyUnityPackage.Controller
             m_Vehicle_Movement = m_Vehicle.FindAction("Movement", throwIfNotFound: true);
             m_Vehicle_Drifting = m_Vehicle.FindAction("Drifting", throwIfNotFound: true);
             m_Vehicle_Klaxon = m_Vehicle.FindAction("Klaxon", throwIfNotFound: true);
+            m_Vehicle_HeadLight = m_Vehicle.FindAction("HeadLight", throwIfNotFound: true);
             // VehicleRide
             m_VehicleRide = asset.FindActionMap("VehicleRide", throwIfNotFound: true);
             m_VehicleRide_Inside = m_VehicleRide.FindAction("Inside", throwIfNotFound: true);
@@ -2026,6 +2047,7 @@ namespace MyUnityPackage.Controller
         private readonly InputAction m_Vehicle_Movement;
         private readonly InputAction m_Vehicle_Drifting;
         private readonly InputAction m_Vehicle_Klaxon;
+        private readonly InputAction m_Vehicle_HeadLight;
         /// <summary>
         /// Provides access to input actions defined in input action map "Vehicle".
         /// </summary>
@@ -2049,6 +2071,10 @@ namespace MyUnityPackage.Controller
             /// Provides access to the underlying input action "Vehicle/Klaxon".
             /// </summary>
             public InputAction @Klaxon => m_Wrapper.m_Vehicle_Klaxon;
+            /// <summary>
+            /// Provides access to the underlying input action "Vehicle/HeadLight".
+            /// </summary>
+            public InputAction @HeadLight => m_Wrapper.m_Vehicle_HeadLight;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -2084,6 +2110,9 @@ namespace MyUnityPackage.Controller
                 @Klaxon.started += instance.OnKlaxon;
                 @Klaxon.performed += instance.OnKlaxon;
                 @Klaxon.canceled += instance.OnKlaxon;
+                @HeadLight.started += instance.OnHeadLight;
+                @HeadLight.performed += instance.OnHeadLight;
+                @HeadLight.canceled += instance.OnHeadLight;
             }
 
             /// <summary>
@@ -2104,6 +2133,9 @@ namespace MyUnityPackage.Controller
                 @Klaxon.started -= instance.OnKlaxon;
                 @Klaxon.performed -= instance.OnKlaxon;
                 @Klaxon.canceled -= instance.OnKlaxon;
+                @HeadLight.started -= instance.OnHeadLight;
+                @HeadLight.performed -= instance.OnHeadLight;
+                @HeadLight.canceled -= instance.OnHeadLight;
             }
 
             /// <summary>
@@ -2491,6 +2523,13 @@ namespace MyUnityPackage.Controller
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnKlaxon(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "HeadLight" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnHeadLight(InputAction.CallbackContext context);
         }
         /// <summary>
         /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "VehicleRide" which allows adding and removing callbacks.

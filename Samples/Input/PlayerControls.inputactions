@@ -1015,6 +1015,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "HeadLight",
+                    "type": "Button",
+                    "id": "aa3fd99a-da3d-442a-a6b3-d761db2d3f17",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1169,6 +1178,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Klaxon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ddeb3cb2-8f5a-4a34-a5e1-5aaabdcbb060",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HeadLight",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

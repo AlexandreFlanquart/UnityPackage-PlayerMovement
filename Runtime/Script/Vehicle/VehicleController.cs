@@ -1,4 +1,5 @@
 using System;
+using MyUnityPackage.Toolkit;
 using UnityEngine;
 
 namespace MyUnityPackage.Controller
@@ -39,6 +40,9 @@ namespace MyUnityPackage.Controller
         float availableTorqueReverse = 0;
         float currentMotorTorqueReverse = 0;
 
+        [Header("Headlight")]
+        [SerializeField] HeadlightHandler headlightHandler;
+
         //[Header("VFX")]
         //driftEffect;
         void Start()
@@ -74,6 +78,9 @@ namespace MyUnityPackage.Controller
 
             // Determine if the player is accelerating or trying to reverse
             bool isAccelerating = Mathf.Sign(vInput) == Mathf.Sign(forwardSpeed);
+            bool isBreaking = false;
+            bool isReversing = false;
+            
             foreach (var wheel in wheelList)
             {
                 wheel.Drift(hInput,vehicleInput.IsDrifting);
@@ -82,15 +89,38 @@ namespace MyUnityPackage.Controller
                 if(isAccelerating)
                 {
                     if(vInput>=0)
-                        wheel.Acceleration(vInput,currentMotorTorque);
+                    {
+                         wheel.Acceleration(vInput,currentMotorTorque);
+                    }
                     else
+                    {
                         wheel.Reverse(vInput,currentMotorTorqueReverse);
+                        isReversing = true;
+                    }
+                        
                 }
-                else
+                else if (vInput != 0)
+                {
                     wheel.Break(vInput,BrakeTorque);
+                    isBreaking = true;
+                }
+                    
                 wheel.UpdatePosition();
             }
-        }
+            MUPLogger.Info(isAccelerating + " : " + isBreaking + " : " + isReversing);
+            if(isBreaking)
+            {
+               headlightHandler.BreakLightOn();
+            }
+            else
+            {
+                headlightHandler.BreakLightOff();
+            }
+            if(isReversing)
+                headlightHandler.ReverseLightOn();
+            else
+                headlightHandler.ReverseLightOff();
+        }   
 
         #region RETURN_VEHICLE
 
@@ -98,13 +128,7 @@ namespace MyUnityPackage.Controller
         {
             return transform.localEulerAngles.z>80 && transform.localEulerAngles.z<280; 
         }
-        /*private bool NotOnWheels()
-        {
-            foreach (var wheel in wheelList)
-                if(wheel.isGrounded)
-                    return true;
-            return false;
-        }*/
+
         #endregion
        // public float GetMotorTorque() => motorTorque;
         //public float GetBrakeTorque() => brakeTorque;
