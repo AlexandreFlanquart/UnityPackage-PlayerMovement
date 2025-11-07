@@ -1,6 +1,6 @@
 {
   "name": "com.myunitypackage.controller",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "displayName": "UnityPackage - Controller ",
   "description": "Package with premade script for Character Controller",
   "unity": "6000.0",

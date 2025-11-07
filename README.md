@@ -5,6 +5,7 @@ MyUnityPackage Controller is a Unity package who allow you to use premade contro
 - A prefab 1st person controller
 - A prefab 3rd person controller 
 - A prefab to switch between 1st et 3rd person controller
+- A prefab Car controller
 
 This package grant you a good modularity with the adaptibility of the PlayerActionsInput.
 
