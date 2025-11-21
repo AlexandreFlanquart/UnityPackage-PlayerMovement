@@ -11,7 +11,6 @@ namespace MyUnityPackage.Controller
             Vector3 center = charController.transform.position + charController.center;
             float dist = charController.height /2f + charController.stepOffset;
 
-
             RaycastHit hit;
             if(Physics.SphereCast(center,charController.radius,Vector3.down,out hit,dist,mask))
             {

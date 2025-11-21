@@ -33,13 +33,13 @@ namespace MyUnityPackage.Controller
         [SerializeField]private float jumpForce=1;
         [SerializeField]private float drag = 20;
         [SerializeField]private float inAirDrag;
-        [SerializeField]private float antiBump ;
-
+        
+        private float antiBump ;
         bool isGrounded = false;
-
         private bool jumpedLastFrame;
         private float verticalVelocity;
         private float stepOffset;
+        [SerializeField] private LayerMask groundLayer; 
         [Header("Camera")]
         public float lookSenseHorizontal = 0.1f;
         public float lookSenseVertical = 0.1f;
@@ -53,7 +53,8 @@ namespace MyUnityPackage.Controller
         private Vector2 moveInputValue;    
         private Vector2 lookInputValue;    
         private bool isSprinting = false;
-        [SerializeField] private LayerMask groundLayer; 
+        private bool isWalking = false;
+      
         void Awake()
         {
             inputManager = GetComponent<IPlayerMovement>();
@@ -68,6 +69,7 @@ namespace MyUnityPackage.Controller
             inputManager.OnMoveEvent += Move;
             inputManager.OnLookEvent += Look;
             inputManager.OnSprintEvent += Sprint;
+            playerState.OnStateChanged += StateChanged;
         }
         // Update is called once per frame
         void Update()
@@ -78,18 +80,7 @@ namespace MyUnityPackage.Controller
         }
 
         private void UpdateState()
-        {
-            bool canRun = CanRun();
-            bool isMovementInput = moveInputValue != Vector2.zero;
-            bool isMovingLaterally = IsMovingLaterally();
-            bool isSprinting_ = isSprinting && isMovingLaterally;
-            bool isWalking = !canRun && isMovingLaterally ;
-            
-
-            EPlayerState lateralState = isWalking ? EPlayerState.Walk :
-                                        isSprinting_? EPlayerState.Sprint :
-                                        isMovingLaterally || isMovementInput? EPlayerState.Run: EPlayerState.Idle;
-            
+        {    
             if((!isGrounded|| jumpedLastFrame) && characterController.velocity.y>0f)
             {
                 playerState.SetPlayerState(EPlayerState.Jump);
@@ -104,10 +95,20 @@ namespace MyUnityPackage.Controller
             }
             else
             {
+                //Different state
+                bool canRun = CanRun();
+                bool isMovementInput = moveInputValue != Vector2.zero;
+                bool isMovingLaterally = IsMovingLaterally();
+                bool isSprinting_ = isSprinting && isMovingLaterally;
+                bool isWalking_ = !canRun && isMovingLaterally ;
+
+                EPlayerState lateralState = isWalking_ ? EPlayerState.Walk :
+                                        isSprinting_? EPlayerState.Sprint :
+                                        isMovingLaterally || isMovementInput? EPlayerState.Run: EPlayerState.Idle;
+
                 playerState.SetPlayerState(lateralState);
                 characterController.stepOffset = stepOffset;
-            }
-                
+            }          
         }
      
         private void UpdateMovement()
@@ -118,15 +119,13 @@ namespace MyUnityPackage.Controller
                 verticalVelocity = -antiBump;
         
             //Lateral
-
-            bool isSprinting = playerState.GetPlayerState() == EPlayerState.Sprint;
-            bool isWalking = playerState.GetPlayerState() == EPlayerState.Walk;
-            float lateralAcceleration = !isGrounded ? inAirAcceleration:
-                                isWalking?  walkAcceleration: 
+            float lateralAcceleration = !isGrounded ? inAirAcceleration :
+                                isWalking? walkAcceleration : 
                                 isSprinting ? sprintAcceleration : runAcceleration;
+
             float clampLateralMagnitude = !isGrounded ? sprintSpeed :
                                         isWalking ? walkSpeed : 
-                                        isSprinting ? sprintSpeed: runSpeed;
+                                        isSprinting ? sprintSpeed : runSpeed;
 
             Vector3 cameraForwardXZ = new Vector3(playerCamera.transform.forward.x,0,playerCamera.transform.forward.z).normalized;
             Vector3 cameraRightXZ =new Vector3(playerCamera.transform.right.x,0,playerCamera.transform.right.z).normalized;
@@ -149,7 +148,6 @@ namespace MyUnityPackage.Controller
         
         }
 
-
         private Vector3 HandleSteepWalls(Vector3 velocity)
         {
             Vector3 normal = CharacterControllerUtils.GetNormalWithSphereCast(characterController,groundLayer);
@@ -163,13 +161,14 @@ namespace MyUnityPackage.Controller
 
             return velocity;
         }
+        private bool CanRun() => moveInputValue.y >= Mathf.Abs(moveInputValue.x);
         private bool IsMovingLaterally()
         {
             Vector3 lateralVelocity = new Vector3(characterController.velocity.x, 0,characterController.velocity.y);
 
             return lateralVelocity.magnitude > movingThreshold;
         }
-
+#region GROUNDED_FUNCTION
         private bool IsGrounded()
         {
             bool grounded = playerState.IsGrounded() ? IsGroundedWhileGrounded() : IsGroundedWhileAirborne();
@@ -190,8 +189,8 @@ namespace MyUnityPackage.Controller
             bool grounded = Physics.CheckSphere(spherePos,characterController.radius,groundLayer,QueryTriggerInteraction.Ignore);
             return grounded;
         }
-
-        private bool CanRun() => moveInputValue.y >= Mathf.Abs(moveInputValue.x);
+#endregion
+        
 
 #region EVENT_FUNCTION
         void Sprint(bool value)
@@ -223,6 +222,11 @@ namespace MyUnityPackage.Controller
                 verticalVelocity += antiBump + (float)Math.Sqrt(jumpForce*3*gravity);
                 jumpedLastFrame = true;
             }
+        }
+        void StateChanged()
+        {
+            isSprinting = playerState.GetPlayerState() == EPlayerState.Sprint;
+            isWalking = playerState.GetPlayerState() == EPlayerState.Walk;
         }
 #endregion
     }
