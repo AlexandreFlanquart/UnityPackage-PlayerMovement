@@ -11,9 +11,7 @@ namespace MyUnityPackage.Controller
     [RequireComponent(typeof(PlayerAnimation))]
     public class PlayerController : MonoBehaviour
     {
-
         [Header("Components")]
-
         [SerializeField] private Camera playerCamera;
         private PlayerState playerState;
         private  IPlayerMovement inputManager;
