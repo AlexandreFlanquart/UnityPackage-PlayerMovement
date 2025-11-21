@@ -17,7 +17,7 @@ namespace MyUnityPackage.Controller
         public event Action<Vector2> OnMoveEvent;
         public event Action OnCrouchEvent;
         public event Action<Vector2> OnLookEvent;
-        public event Action OnSprintEvent;
+        public event Action<bool> OnSprintEvent;
     }
 
 }

@@ -29,7 +29,7 @@ namespace MyUnityPackage.Controller
         public event Action<Vector2> OnMoveEvent;
         public event Action OnCrouchEvent;
         public event Action<Vector2> OnLookEvent;
-        public event Action OnSprintEvent;
+        public event Action<bool> OnSprintEvent;
 
         void OnEnable()
         {
@@ -80,7 +80,12 @@ namespace MyUnityPackage.Controller
         public void OnSprint(InputAction.CallbackContext context)
         {
             MUPLogger.Info("Sprint input detected : " + context.performed);
-            OnSprintEvent?.Invoke();       
+            bool isPressed = false;
+            if(context.performed)
+                isPressed = true;   
+            if(context.canceled)
+                isPressed = false;   
+            OnSprintEvent?.Invoke(isPressed);       
         }
     }
 }
