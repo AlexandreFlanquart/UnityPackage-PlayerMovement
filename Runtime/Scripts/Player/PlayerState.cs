@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace MyUnityPackage.Controller
@@ -15,9 +16,15 @@ namespace MyUnityPackage.Controller
     public class PlayerState : MonoBehaviour
     {
         private EPlayerState playerState;
+        public Action OnStateChanged;
 
         public EPlayerState GetPlayerState() => playerState;
-        public void SetPlayerState(EPlayerState _playerState) => playerState = _playerState;
+        public void SetPlayerState(EPlayerState _playerState) 
+        {
+            if(playerState == _playerState) return;
+            playerState = _playerState;
+            OnStateChanged?.Invoke();
+        } 
         public bool IsGrounded() => IsGrounded(playerState);
         public bool IsGrounded(EPlayerState _playerState)
         {

@@ -9,7 +9,6 @@ namespace MyUnityPackage.Controller
     [DefaultExecutionOrder(-1)]
     [RequireComponent(typeof(PlayerState))]
     [RequireComponent(typeof(PlayerAnimation))]
-    //[RequireComponent(typeof(PlayerMovementInput))]
     public class PlayerController : MonoBehaviour
     {
 
@@ -17,7 +16,7 @@ namespace MyUnityPackage.Controller
 
         [SerializeField] private Camera playerCamera;
         private PlayerState playerState;
-        private  IPlayerMovement/*PlayerMovementInput*/ inputManager;
+        private  IPlayerMovement inputManager;
         private CharacterController characterController;
 
         [Header("Variable")]
@@ -57,7 +56,7 @@ namespace MyUnityPackage.Controller
         [SerializeField] private LayerMask groundLayer; 
         void Awake()
         {
-            inputManager = GetComponent<IPlayerMovement>/*PlayerMovementInput>*/();
+            inputManager = GetComponent<IPlayerMovement>();
             playerState = GetComponent<PlayerState>();
             characterController = GetComponent<CharacterController>();   
         
@@ -78,15 +77,10 @@ namespace MyUnityPackage.Controller
             UpdateMovement();
         }
 
-        void LateUpdate()
-        {
-            UpdateCamera();
-        }
-
         private void UpdateState()
         {
             bool canRun = CanRun();
-            bool isMovementInput = /*inputManager.MovementInput*/moveInputValue != Vector2.zero;
+            bool isMovementInput = moveInputValue != Vector2.zero;
             bool isMovingLaterally = IsMovingLaterally();
             bool isSprinting_ = isSprinting && isMovingLaterally;
             bool isWalking = !canRun && isMovingLaterally ;
@@ -95,8 +89,7 @@ namespace MyUnityPackage.Controller
             EPlayerState lateralState = isWalking ? EPlayerState.Walk :
                                         isSprinting_? EPlayerState.Sprint :
                                         isMovingLaterally || isMovementInput? EPlayerState.Run: EPlayerState.Idle;
-            playerState.SetPlayerState(lateralState);
-
+            
             if((!isGrounded|| jumpedLastFrame) && characterController.velocity.y>0f)
             {
                 playerState.SetPlayerState(EPlayerState.Jump);
@@ -111,45 +104,19 @@ namespace MyUnityPackage.Controller
             }
             else
             {
+                playerState.SetPlayerState(lateralState);
                 characterController.stepOffset = stepOffset;
             }
                 
         }
-        void Sprint(bool value)
-        {
-            isSprinting = value;
-        }
-        void Move(Vector2 value)
-        {
-            moveInputValue = value;
-        }
-        void Look(Vector2 value)
-        {
-            lookInputValue = value;
-        }
-        void Jump(bool value)
-        {
-            if(playerState.IsGrounded())
-            {
-                verticalVelocity += antiBump + (float)Math.Sqrt(jumpForce*3*gravity);
-                jumpedLastFrame = true;
-            }
-        }
+     
         private void UpdateMovement()
         {
             //Vertical
-
-
             verticalVelocity -= gravity*Time.deltaTime;
             if(isGrounded && verticalVelocity<0)
                 verticalVelocity = -antiBump;
         
-            /*if(inputManager.JumpPressed && isGrounded)
-            {
-                verticalVelocity += antiBump + (float)Math.Sqrt(jumpForce*3*gravity);
-                jumpedLastFrame = true;
-            }*/
-            
             //Lateral
 
             bool isSprinting = playerState.GetPlayerState() == EPlayerState.Sprint;
@@ -163,7 +130,7 @@ namespace MyUnityPackage.Controller
 
             Vector3 cameraForwardXZ = new Vector3(playerCamera.transform.forward.x,0,playerCamera.transform.forward.z).normalized;
             Vector3 cameraRightXZ =new Vector3(playerCamera.transform.right.x,0,playerCamera.transform.right.z).normalized;
-            Vector3 movementDirection = cameraRightXZ * moveInputValue.x/*inputManager.MovementInput.x*/ +cameraForwardXZ */* inputManager.MovementInput.y*/moveInputValue.y;
+            Vector3 movementDirection = cameraRightXZ * moveInputValue.x + cameraForwardXZ * moveInputValue.y;
         
             Vector3 movementDelta = movementDirection * lateralAcceleration * Time.deltaTime;
             Vector3 newVelocity = characterController.velocity + movementDelta;
@@ -182,16 +149,6 @@ namespace MyUnityPackage.Controller
         
         }
 
-        private void UpdateCamera()
-        {
-            cameraRotation.x += lookSenseHorizontal * /*inputManager.LookInput.x*/lookInputValue.x;
-            cameraRotation.y = Mathf.Clamp(cameraRotation.y-lookSenseVertical * /*inputManager.LookInput.y*/lookInputValue.y,-lookLimitVertical,lookLimitVertical);
-        
-            playerTargetRot.x += transform.eulerAngles.x+lookSenseHorizontal*/*inputManager.LookInput.x*/lookInputValue.x;
-            transform.rotation = Quaternion.Euler(0,playerTargetRot.x,0);
-
-            playerCamera.transform.rotation = Quaternion.Euler(cameraRotation.y,cameraRotation.x,0);
-        }
 
         private Vector3 HandleSteepWalls(Vector3 velocity)
         {
@@ -234,8 +191,40 @@ namespace MyUnityPackage.Controller
             return grounded;
         }
 
-        private bool CanRun() => /*inputManager.MovementInput.y*/moveInputValue.y >= Mathf.Abs(/*inputManager.MovementInput.x*/moveInputValue.x);
+        private bool CanRun() => moveInputValue.y >= Mathf.Abs(moveInputValue.x);
 
+#region EVENT_FUNCTION
+        void Sprint(bool value)
+        {
+            isSprinting = value;
+        }
+        void Move(Vector2 value)
+        {
+            moveInputValue = value;
+        }
+        void Look(Vector2 value)
+        {
+            lookInputValue = value;
+
+
+            cameraRotation.x += lookSenseHorizontal * lookInputValue.x;
+            cameraRotation.y = Mathf.Clamp(cameraRotation.y-lookSenseVertical * lookInputValue.y,-lookLimitVertical,lookLimitVertical);
+        
+            playerTargetRot.x += transform.eulerAngles.x+lookSenseHorizontal * lookInputValue.x;
+            transform.rotation = Quaternion.Euler(0,playerTargetRot.x,0);
+
+            playerCamera.transform.rotation = Quaternion.Euler(cameraRotation.y,cameraRotation.x,0);
+        
+        }
+        void Jump(bool value)
+        {
+            if(playerState.IsGrounded())
+            {
+                verticalVelocity += antiBump + (float)Math.Sqrt(jumpForce*3*gravity);
+                jumpedLastFrame = true;
+            }
+        }
+#endregion
     }
 
 }
