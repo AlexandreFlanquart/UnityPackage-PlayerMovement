@@ -127,7 +127,7 @@ namespace MyUnityPackage.Controller
         {
             lookInputValue = value;
         }
-        void Jump()
+        void Jump(bool value)
         {
             if(playerState.IsGrounded())
             {

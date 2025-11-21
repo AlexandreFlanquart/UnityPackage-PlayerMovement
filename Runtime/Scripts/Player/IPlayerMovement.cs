@@ -13,7 +13,7 @@ namespace MyUnityPackage.Controller
             public bool IsSprinting { get; set; }
         */
 
-        public event Action OnJumpEvent;
+        public event Action<bool> OnJumpEvent;
         public event Action<Vector2> OnMoveEvent;
         public event Action OnCrouchEvent;
         public event Action<Vector2> OnLookEvent;

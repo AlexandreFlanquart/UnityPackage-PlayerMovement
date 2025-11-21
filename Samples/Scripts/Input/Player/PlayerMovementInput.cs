@@ -2,6 +2,7 @@ using System;
 using MyUnityPackage.Toolkit;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.ProBuilder.MeshOperations;
 
 namespace MyUnityPackage.Controller
 {
@@ -25,7 +26,7 @@ namespace MyUnityPackage.Controller
             JumpPressed = false;
         }
 */
-        public event Action OnJumpEvent;
+        public event Action<bool> OnJumpEvent;
         public event Action<Vector2> OnMoveEvent;
         public event Action OnCrouchEvent;
         public event Action<Vector2> OnLookEvent;
@@ -62,7 +63,14 @@ namespace MyUnityPackage.Controller
         public void OnJump(InputAction.CallbackContext context)
         {
             MUPLogger.Info("Jump input detected : " + context.performed);
-            OnJumpEvent?.Invoke();
+            bool isPressed = false;
+            if(context.started)
+                isPressed = true;
+            else if(context.performed)
+                return;   
+            else if(context.canceled)
+                isPressed = false;   
+            OnJumpEvent?.Invoke(isPressed);
         }
 
         public void OnLook(InputAction.CallbackContext context)
@@ -81,9 +89,11 @@ namespace MyUnityPackage.Controller
         {
             MUPLogger.Info("Sprint input detected : " + context.performed);
             bool isPressed = false;
-            if(context.performed)
-                isPressed = true;   
-            if(context.canceled)
+            if(context.started)
+                isPressed = true;
+            else if(context.performed)
+                return;   
+            else if(context.canceled)
                 isPressed = false;   
             OnSprintEvent?.Invoke(isPressed);       
         }
