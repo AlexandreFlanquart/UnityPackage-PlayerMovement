@@ -26,9 +26,9 @@ namespace MyUnityPackage.Controller
         }
 */
         public event Action OnJumpEvent;
-        public event Action OnMoveEvent;
+        public event Action<Vector2> OnMoveEvent;
         public event Action OnCrouchEvent;
-        public event Action OnLookEvent;
+        public event Action<Vector2> OnLookEvent;
         public event Action OnSprintEvent;
 
         void OnEnable()
@@ -41,6 +41,7 @@ namespace MyUnityPackage.Controller
             PlayerInputManager.Instance.PlayerControls.PlayerMovement.Enable();
             PlayerInputManager.Instance.PlayerControls.PlayerMovement.SetCallbacks(this);
         }
+
         void OnDisable()
         {
             if(PlayerInputManager.Instance.PlayerControls == null)
@@ -66,14 +67,14 @@ namespace MyUnityPackage.Controller
 
         public void OnLook(InputAction.CallbackContext context)
         {
-            MUPLogger.Info("Look input detected : " + context.performed);
-            OnLookEvent?.Invoke();
+            MUPLogger.Info("Look input detected : " + context.ReadValue<Vector2>());
+            OnLookEvent?.Invoke(context.ReadValue<Vector2>());
         }
 
         public void OnMovement(InputAction.CallbackContext context)
         {
-            MUPLogger.Info("Move input detected : " + context.performed);
-            OnMoveEvent?.Invoke();
+            MUPLogger.Info("Move input detected : " + context.ReadValue<Vector2>());
+            OnMoveEvent?.Invoke(context.ReadValue<Vector2>());
         }
 
         public void OnSprint(InputAction.CallbackContext context)
