@@ -1,4 +1,5 @@
 using MyUnityPackage.Controller;
+using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEngine;
 
 
@@ -22,14 +23,19 @@ namespace MyUnityPackage.Controller
 
         private Vector3 currentValue;
 
-
+        Vector2 moveInputValue;
         void Awake()
         {
             playerState = GetComponent<PlayerState>();
             animator = GetComponent<Animator>();
             inputManager = GetComponent<IPlayerMovement/*PlayerMovementInput*/>();
-        }
 
+    
+        }
+        void Move(Vector2 value)
+        {
+            moveInputValue = value;
+        }
         void Update()
         {
             UpdateState();
@@ -44,7 +50,7 @@ namespace MyUnityPackage.Controller
             bool isFalling = playerState.GetPlayerState() == EPlayerState.Fall;
             bool isGrounded = playerState.IsGrounded();
 
-            Vector2 input = isSprinting ? inputManager.MovementInput*1.5f:inputManager.MovementInput;
+            Vector2 input = isSprinting ? /*inputManager.MovementInput*/moveInputValue*1.5f:/*inputManager.MovementInput*/moveInputValue;
             currentValue = Vector3.Lerp(currentValue, input, blendSpeed);
 
             animator.SetBool(isGroundedHash, isGrounded);

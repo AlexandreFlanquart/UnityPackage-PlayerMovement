@@ -67,7 +67,7 @@ namespace MyUnityPackage.Controller
 
         public void OnLook(InputAction.CallbackContext context)
         {
-            MUPLogger.Info("Look input detected : " + context.ReadValue<Vector2>());
+            //MUPLogger.Info("Look input detected : " + context.ReadValue<Vector2>());
             OnLookEvent?.Invoke(context.ReadValue<Vector2>());
         }
 

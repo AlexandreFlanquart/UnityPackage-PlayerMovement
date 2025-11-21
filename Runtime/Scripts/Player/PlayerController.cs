@@ -36,6 +36,8 @@ namespace MyUnityPackage.Controller
         [SerializeField]private float inAirDrag;
         [SerializeField]private float antiBump ;
 
+        bool isGrounded = false;
+
         private bool jumpedLastFrame;
         private float verticalVelocity;
         private float stepOffset;
@@ -48,7 +50,10 @@ namespace MyUnityPackage.Controller
         private Vector2 cameraRotation = Vector2.zero;
         private Vector2 playerTargetRot;
   
-
+        [Header("EventValue")]
+        private Vector2 moveInputValue;    
+        private Vector2 lookInputValue;    
+        private bool isSprinting = false;
         [SerializeField] private LayerMask groundLayer; 
         void Awake()
         {
@@ -58,10 +63,17 @@ namespace MyUnityPackage.Controller
         
             antiBump = sprintSpeed;
             stepOffset = characterController.stepOffset;
+
+            //Event
+            inputManager.OnJumpEvent += Jump;
+            inputManager.OnMoveEvent += Move;
+            inputManager.OnLookEvent += Look;
+            inputManager.OnSprintEvent += Sprint;
         }
         // Update is called once per frame
         void Update()
         {
+            isGrounded = IsGrounded();
             UpdateState();
             UpdateMovement();
         }
@@ -74,14 +86,14 @@ namespace MyUnityPackage.Controller
         private void UpdateState()
         {
             bool canRun = CanRun();
-            bool isMovementInput = inputManager.MovementInput != Vector2.zero;
+            bool isMovementInput = /*inputManager.MovementInput*/moveInputValue != Vector2.zero;
             bool isMovingLaterally = IsMovingLaterally();
-            bool isSprinting = inputManager.IsSprinting && isMovingLaterally;
+            bool isSprinting_ = isSprinting && isMovingLaterally;
             bool isWalking = !canRun && isMovingLaterally ;
-            bool isGrounded = IsGrounded();
+            
 
             EPlayerState lateralState = isWalking ? EPlayerState.Walk :
-                                        isSprinting? EPlayerState.Sprint :
+                                        isSprinting_? EPlayerState.Sprint :
                                         isMovingLaterally || isMovementInput? EPlayerState.Run: EPlayerState.Idle;
             playerState.SetPlayerState(lateralState);
 
@@ -103,22 +115,40 @@ namespace MyUnityPackage.Controller
             }
                 
         }
-
+        void Sprint(bool value)
+        {
+            isSprinting = value;
+        }
+        void Move(Vector2 value)
+        {
+            moveInputValue = value;
+        }
+        void Look(Vector2 value)
+        {
+            lookInputValue = value;
+        }
+        void Jump()
+        {
+            if(playerState.IsGrounded())
+            {
+                verticalVelocity += antiBump + (float)Math.Sqrt(jumpForce*3*gravity);
+                jumpedLastFrame = true;
+            }
+        }
         private void UpdateMovement()
         {
             //Vertical
 
-            bool isGrounded =  playerState.IsGrounded();
 
             verticalVelocity -= gravity*Time.deltaTime;
             if(isGrounded && verticalVelocity<0)
                 verticalVelocity = -antiBump;
         
-            if(inputManager.JumpPressed && isGrounded)
+            /*if(inputManager.JumpPressed && isGrounded)
             {
                 verticalVelocity += antiBump + (float)Math.Sqrt(jumpForce*3*gravity);
                 jumpedLastFrame = true;
-            }
+            }*/
             
             //Lateral
 
@@ -133,7 +163,7 @@ namespace MyUnityPackage.Controller
 
             Vector3 cameraForwardXZ = new Vector3(playerCamera.transform.forward.x,0,playerCamera.transform.forward.z).normalized;
             Vector3 cameraRightXZ =new Vector3(playerCamera.transform.right.x,0,playerCamera.transform.right.z).normalized;
-            Vector3 movementDirection = cameraRightXZ * inputManager.MovementInput.x +cameraForwardXZ * inputManager.MovementInput.y;
+            Vector3 movementDirection = cameraRightXZ * moveInputValue.x/*inputManager.MovementInput.x*/ +cameraForwardXZ */* inputManager.MovementInput.y*/moveInputValue.y;
         
             Vector3 movementDelta = movementDirection * lateralAcceleration * Time.deltaTime;
             Vector3 newVelocity = characterController.velocity + movementDelta;
@@ -154,10 +184,10 @@ namespace MyUnityPackage.Controller
 
         private void UpdateCamera()
         {
-            cameraRotation.x += lookSenseHorizontal * inputManager.LookInput.x;
-            cameraRotation.y = Mathf.Clamp(cameraRotation.y-lookSenseVertical * inputManager.LookInput.y,-lookLimitVertical,lookLimitVertical);
+            cameraRotation.x += lookSenseHorizontal * /*inputManager.LookInput.x*/lookInputValue.x;
+            cameraRotation.y = Mathf.Clamp(cameraRotation.y-lookSenseVertical * /*inputManager.LookInput.y*/lookInputValue.y,-lookLimitVertical,lookLimitVertical);
         
-            playerTargetRot.x += transform.eulerAngles.x+lookSenseHorizontal*inputManager.LookInput.x;
+            playerTargetRot.x += transform.eulerAngles.x+lookSenseHorizontal*/*inputManager.LookInput.x*/lookInputValue.x;
             transform.rotation = Quaternion.Euler(0,playerTargetRot.x,0);
 
             playerCamera.transform.rotation = Quaternion.Euler(cameraRotation.y,cameraRotation.x,0);
@@ -204,7 +234,7 @@ namespace MyUnityPackage.Controller
             return grounded;
         }
 
-        private bool CanRun() => inputManager.MovementInput.y >= Mathf.Abs(inputManager.MovementInput.x);
+        private bool CanRun() => /*inputManager.MovementInput.y*/moveInputValue.y >= Mathf.Abs(/*inputManager.MovementInput.x*/moveInputValue.x);
 
     }
 
