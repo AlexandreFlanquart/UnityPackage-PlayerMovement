@@ -14,6 +14,5 @@
 
 
 
-
 [1.0.0]: https://github.com/AlexandreFlanquart/UnityPackage-PlayerMovement/releases/tag/v1.0.0
 [1.0.1]: https://github.com/AlexandreFlanquart/UnityPackage-PlayerMovement/releases/tag/v1.0.1
