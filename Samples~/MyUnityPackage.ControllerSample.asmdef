@@ -1,0 +1,20 @@
+{
+    "name": "MyUnityPackage.ControllerSample",
+    "rootNamespace": "",
+    "references": [
+        "MyUnityPackage.Controller",
+        "Unity.InputSystem",
+        "Unity.Cinemachine",
+        "Unity.TextMeshPro",
+        "MyUnityPackage.Toolkit"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

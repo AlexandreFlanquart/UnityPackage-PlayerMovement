@@ -1,77 +1,121 @@
-using MyUnityPackage.Toolkit;
 using UnityEngine;
 
 namespace MyUnityPackage.Controller
 {
-    
+    public enum InputToggleMode
+    {
+        Hold,
+        Toggle
+    }
+
     [RequireComponent(typeof(Rigidbody2D))]
+    [RequireComponent(typeof(IPlayerMovement))]
     public class PlayerController2D : MonoBehaviour
-    {   
-        [SerializeField] public float walkSpeedMax = 2;
-        [SerializeField] public float sprintSpeedMax = 4;
-        [SerializeField] public float acceleration = 50;
-        [SerializeField] public float drag = 3f;
-
-        private  IPlayerMovement inputManager;
+    {
+        private IPlayerMovement input;
         private Rigidbody2D rb;
-        public float currentSpeedMax;
-        private bool canMove = true;
 
-        private void Awake() {
-            inputManager = GetComponent<IPlayerMovement>();
-        
+        [Header("Movement Settings")]
+        [SerializeField] private float baseSpeed = 5f;
+
+        [Header("Sprint Settings")]
+        [SerializeField] private InputToggleMode sprintMode = InputToggleMode.Hold;
+        [SerializeField] private float sprintMultiplier = 1.5f;
+        private bool sprintHeld;
+        private bool sprintToggled;
+        private bool IsSprinting => sprintMode == InputToggleMode.Hold ? sprintHeld : sprintToggled;
+
+        [Header("Crouch Settings")]
+        [SerializeField] private InputToggleMode crouchMode = InputToggleMode.Hold;
+        [SerializeField] private float crouchMultiplier = 0.5f;
+        private bool crouchHeld;
+        private bool crouchToggled;
+        private bool IsCrouching => crouchMode == InputToggleMode.Hold ? crouchHeld : crouchToggled;
+       
+        public bool IsSprintingPublic => IsSprinting;
+        public bool IsCrouchingPublic => IsCrouching;        private Vector2 moveInput;
+
+        private void Awake()
+        {
             rb = GetComponent<Rigidbody2D>();
-            rb.linearDamping = drag;
-
-            currentSpeedMax = walkSpeedMax;
-
-            inputManager.OnMoveEvent += OnPlayerMove;
+            input = GetComponent<IPlayerMovement>();
         }
 
-        public void OnPlayerMove(Vector2 p_movementInput) {
-            if(!canMove) return;
-            MUPLogger.Info("OnPlayerMove : " + p_movementInput);
-            if (p_movementInput != Vector2.zero)
+        private void OnEnable()
+        {
+            if (input == null)
             {
-                Move(p_movementInput * acceleration);
-
+                Debug.LogError("Input source does not implement IPlayerInput.");
+                return;
             }
-            // Limit speed
-            if (rb.linearVelocity.sqrMagnitude  > currentSpeedMax*currentSpeedMax)
-            {
-                rb.linearVelocity = rb.linearVelocity.normalized * currentSpeedMax;
-            }
-            
+
+            // Subscribe to input events
+            input.OnMoveEvent += HandleMoveInput;
+            input.OnSprintStarted += HandleSprintStart;
+            input.OnSprintCanceled += HandleSprintCancel;
+            input.OnCrouchStarted += HandleCrouchStart;
+            input.OnCrouchCanceled += HandleCrouchCancel;
         }
 
-        public void Move(Vector2 force){
-            MUPLogger.Info("Move : " + force);
-            rb.AddForce(force);
+        private void OnDisable()
+        {
+            if (input == null) return;
+
+            // Unsubscribe from input events
+            input.OnMoveEvent -= HandleMoveInput;
+            input.OnSprintStarted -= HandleSprintStart;
+            input.OnSprintCanceled -= HandleSprintCancel;
+            input.OnCrouchStarted -= HandleCrouchStart;
+            input.OnCrouchCanceled -= HandleCrouchCancel;
         }
 
-        public void EnableMovement(){
-            canMove = true;
+        private void FixedUpdate()
+        {
+            float speed = baseSpeed;
+
+            if (IsSprinting)
+                speed *= sprintMultiplier;
+
+            if (IsCrouching)
+                speed *= crouchMultiplier;
+
+            Vector2 velocity = moveInput.normalized * speed;
+            rb.linearVelocity = velocity;
         }
 
-        public void DesableMovement(){
-            rb.linearVelocity = Vector2.zero;
-            canMove = false;
+        // Input Handlers ------------------------------------------
+
+        private void HandleMoveInput(Vector2 value)
+        {
+            moveInput = value;
         }
 
-        public void Teleport(Vector3 position){
-            rb.linearVelocity = Vector2.zero;
-            rb.position = position;
+        private void HandleSprintStart()
+        {
+            if (sprintMode == InputToggleMode.Hold)
+                sprintHeld = true;
+            else
+                sprintToggled = !sprintToggled;
         }
 
+        private void HandleSprintCancel()
+        {
+            if (sprintMode == InputToggleMode.Hold)
+                sprintHeld = false;
+        }
 
-        private void Update(){
-            /*
-            if(oldSpeed != rb.linearVelocity.magnitude){
+        private void HandleCrouchStart()
+        {
+            if (crouchMode == InputToggleMode.Hold)
+                crouchHeld = true;
+            else
+                crouchToggled = !crouchToggled;
+        }
 
-                OnChangeMovementInput?.Invoke(rb.linearVelocity);
-                oldSpeed = rb.linearVelocity.magnitude;
-            }
-            */
+        private void HandleCrouchCancel()
+        {
+            if (crouchMode == InputToggleMode.Hold)
+                crouchHeld = false;
         }
     }
 }

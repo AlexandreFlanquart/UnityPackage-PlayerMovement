@@ -63,10 +63,10 @@ namespace MyUnityPackage.Controller
             stepOffset = characterController.stepOffset;
 
             //Event
-            inputManager.OnJumpEvent += Jump;
+            inputManager.OnJumpPressed += Jump;
             inputManager.OnMoveEvent += Move;
             inputManager.OnLookEvent += Look;
-            inputManager.OnSprintEvent += Sprint;
+            inputManager.OnSprintStarted += Sprint;
             playerState.OnStateChanged += StateChanged;
         }
         // Update is called once per frame
@@ -191,9 +191,9 @@ namespace MyUnityPackage.Controller
         
 
 #region EVENT_FUNCTION
-        void Sprint(bool value)
+        void Sprint()
         {
-            isSprinting = value;
+           // isSprinting = value;
         }
         void Move(Vector2 value)
         {
@@ -213,7 +213,7 @@ namespace MyUnityPackage.Controller
             playerCamera.transform.rotation = Quaternion.Euler(cameraRotation.y,cameraRotation.x,0);
         
         }
-        void Jump(bool value)
+        void Jump()
         {
             if(playerState.IsGrounded())
             {

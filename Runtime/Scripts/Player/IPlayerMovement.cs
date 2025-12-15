@@ -5,11 +5,23 @@ namespace MyUnityPackage.Controller
 {
     public interface IPlayerMovement
     {
-        public event Action<bool> OnJumpEvent;
+        // Jump events
+        public event Action OnJumpPressed;
+        public event Action OnJumpReleased;
+
+        // Movement input (WASD / left stick)
         public event Action<Vector2> OnMoveEvent;
-        public event Action OnCrouchEvent;
+
+        // Look input (mouse delta / right stick)
         public event Action<Vector2> OnLookEvent;
-        public event Action<bool> OnSprintEvent;
+
+        // Crouch events
+        public event Action OnCrouchStarted;
+        public event Action OnCrouchCanceled;
+
+        // Sprint events
+        public event Action OnSprintStarted;
+        public event Action OnSprintCanceled;
     }
 
 }
