@@ -1,6 +1,6 @@
 {
   "name": "com.myunitypackage.controller",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "displayName": "UnityPackage - Controller ",
   "description": "Package with premade script for Character Controller",
   "unity": "6000.0",
@@ -18,7 +18,7 @@
   ],
   "samples": [
     {
-      "displayName": "SampleScene",
+      "displayName": "Samples",
       "description": "Exemple scene to show the capacity of the character controller",
       "path": "Samples~"
     }

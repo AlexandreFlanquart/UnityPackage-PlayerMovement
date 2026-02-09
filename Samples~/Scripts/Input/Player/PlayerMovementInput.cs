@@ -25,6 +25,8 @@ namespace MyUnityPackage.ControllerSample
         // Sprint events
         public event Action OnSprintStarted;
         public event Action OnSprintCanceled;
+        
+        public event Action<Vector2> OnClickPressed;
 
         private PlayerControls _playerControls;
 
@@ -115,6 +117,17 @@ namespace MyUnityPackage.ControllerSample
                 MUPLogger.Info("Sprint canceled.");
                 OnSprintCanceled?.Invoke();
             }
+        }
+
+        public void OnClick(InputAction.CallbackContext context)
+        {
+            if (!context.performed)
+                return;
+
+            Vector2 screenPos = Input.mousePosition;
+            MUPLogger.Info($"Click input performed at screen pos {screenPos}.");
+
+            OnClickPressed?.Invoke(screenPos);
         }
     }
 }

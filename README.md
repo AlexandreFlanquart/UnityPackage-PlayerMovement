@@ -1,21 +1,24 @@
-# MYUNITYPACKAGE-CONTROLLER
+# UnityPackage-PlayerMovement
 
 ## About
-MyUnityPackage Controller is a Unity package who allow you to use premade controller :
-- A prefab 1st person controller
-- A prefab 3rd person controller 
-- A prefab to switch between 1st et 3rd person controller
-- A prefab Car controller
+UnityPackage-PlayerMovement is a Unity package that provides ready-to-use controller prefabs:
+- First-person controller prefab
+- Third-person controller prefab
+- Switch prefab (first-person ↔ third-person)
+- Vehicle controller prefab
+- 2D controller prefab
 
-This package grant you a good modularity with the adaptibility of the PlayerActionsInput.
+The package is designed to be modular: input is split into action maps and handled by dedicated scripts so you can swap/extend behaviors easily.
 
 ## What's New
 To see the last update of the package check [here](CHANGELOG.md) !
 
-## How to use
-If you want to use this package without changing the model, you can just drop the prefab you want in your scene.
-But if you want to change the model you can drop the prefab in your scene and you can unprefab to adapt the model to your needs.</br>
-Like we said in the [about](#about) section due to each Actions Maps are managed by each their script, so you can adapt each of your map with a personnalised script !
+
+## Input system
+The samples use Unity's **Input System** and include an input asset:
+- `Samples~/Input/PlayerControls.inputactions`
+
+If you want to customize bindings, duplicate the `.inputactions` file and update the scripts that read from `PlayerControls`.
 
 ## 📦 How to install in Unity
 This guide explains how to install this Unity package using the **Unity Package Manager**.
@@ -38,10 +41,12 @@ https://github.com/AlexandreFlanquart/UnityPackage-PlayerMovement.git#v1.0.0
 
 This ensures you get the exact version you need.
 
-### 🔹 4. That's it! ✅
-Your package is now installed and ready to use in your Unity project. 🎮🚀
+### 🔹 4. That's it!
+Your package is now installed and ready to use in your Unity project.
 
 <br>
 
-## 🛠️ Troubleshouting
-If there is an issue, report it to a dev.
+## 🛠️ Troubleshooting
+- If inputs do not work, ensure the **Input System** package is installed and enabled in your project.
+- If you modified the `.inputactions`, make sure the generated C# class (if any) and references are up to date.
+- If there is an issue, report it to the dev team (include Unity version, package version/tag, and a repro).

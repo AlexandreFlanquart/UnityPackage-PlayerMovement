@@ -1,11 +1,8 @@
 using System;
-using MyUnityPackage.Controller;
 using UnityEngine;
-
 
 namespace MyUnityPackage.Controller
 {
-    
     [DefaultExecutionOrder(-1)]
     [RequireComponent(typeof(PlayerState))]
     [RequireComponent(typeof(PlayerAnimation))]

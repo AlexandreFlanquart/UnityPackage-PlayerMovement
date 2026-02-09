@@ -22,6 +22,9 @@ namespace MyUnityPackage.Controller
         // Sprint events
         public event Action OnSprintStarted;
         public event Action OnSprintCanceled;
+
+        // Click event (for click-to-move systems)
+        public event Action<Vector2> OnClickPressed;
     }
 
 }

@@ -137,6 +137,15 @@ namespace MyUnityPackage.ControllerSample
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Click"",
+                    ""type"": ""Button"",
+                    ""id"": ""237b2eac-2f91-4b80-b2d1-b8caada6e20b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -390,6 +399,17 @@ namespace MyUnityPackage.ControllerSample
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""548682f0-c13b-4c73-af57-b5b76b798f38"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1381,6 +1401,7 @@ namespace MyUnityPackage.ControllerSample
             m_PlayerMovement_Crouch = m_PlayerMovement.FindAction("Crouch", throwIfNotFound: true);
             m_PlayerMovement_Jump = m_PlayerMovement.FindAction("Jump", throwIfNotFound: true);
             m_PlayerMovement_Sprint = m_PlayerMovement.FindAction("Sprint", throwIfNotFound: true);
+            m_PlayerMovement_Click = m_PlayerMovement.FindAction("Click", throwIfNotFound: true);
             // PlayerActions
             m_PlayerActions = asset.FindActionMap("PlayerActions", throwIfNotFound: true);
             m_PlayerActions_Newaction = m_PlayerActions.FindAction("New action", throwIfNotFound: true);
@@ -1500,6 +1521,7 @@ namespace MyUnityPackage.ControllerSample
         private readonly InputAction m_PlayerMovement_Crouch;
         private readonly InputAction m_PlayerMovement_Jump;
         private readonly InputAction m_PlayerMovement_Sprint;
+        private readonly InputAction m_PlayerMovement_Click;
         /// <summary>
         /// Provides access to input actions defined in input action map "PlayerMovement".
         /// </summary>
@@ -1531,6 +1553,10 @@ namespace MyUnityPackage.ControllerSample
             /// Provides access to the underlying input action "PlayerMovement/Sprint".
             /// </summary>
             public InputAction @Sprint => m_Wrapper.m_PlayerMovement_Sprint;
+            /// <summary>
+            /// Provides access to the underlying input action "PlayerMovement/Click".
+            /// </summary>
+            public InputAction @Click => m_Wrapper.m_PlayerMovement_Click;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -1572,6 +1598,9 @@ namespace MyUnityPackage.ControllerSample
                 @Sprint.started += instance.OnSprint;
                 @Sprint.performed += instance.OnSprint;
                 @Sprint.canceled += instance.OnSprint;
+                @Click.started += instance.OnClick;
+                @Click.performed += instance.OnClick;
+                @Click.canceled += instance.OnClick;
             }
 
             /// <summary>
@@ -1598,6 +1627,9 @@ namespace MyUnityPackage.ControllerSample
                 @Sprint.started -= instance.OnSprint;
                 @Sprint.performed -= instance.OnSprint;
                 @Sprint.canceled -= instance.OnSprint;
+                @Click.started -= instance.OnClick;
+                @Click.performed -= instance.OnClick;
+                @Click.canceled -= instance.OnClick;
             }
 
             /// <summary>
@@ -2372,6 +2404,13 @@ namespace MyUnityPackage.ControllerSample
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnSprint(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Click" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnClick(InputAction.CallbackContext context);
         }
         /// <summary>
         /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "PlayerActions" which allows adding and removing callbacks.

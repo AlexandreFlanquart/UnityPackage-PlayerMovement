@@ -1,3 +1,9 @@
+## [1.0.3] - 2026-01-09
+### Added
+- IA controller 2D
+- NavMesh system with sprites & tilemaps
+- Click&Move 2D
+
 ## [1.0.2] - 2025-12-15
 ### Added
 - Player controller 2D
