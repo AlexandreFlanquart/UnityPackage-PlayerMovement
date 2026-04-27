@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 using UnityEngine;
 
 namespace BLINK.Tools
@@ -158,3 +159,4 @@ namespace BLINK.Tools
         }
     }
 }
+#endif
