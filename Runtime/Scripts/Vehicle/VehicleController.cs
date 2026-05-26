@@ -14,15 +14,15 @@ namespace MyUnityPackage.Controller
 
         [Header("Motor")]
         [Min(0f)]
-        [SerializeField] public float CarTopSpeed { get; set;} = 200;
+        public float CarTopSpeed = 200;
         [Min(0f)]
-        [SerializeField] public float MotorTorque {get;set;}= 2000f;
+        public float MotorTorque = 2000f;
 
         [Min(0f)]
-        [SerializeField] public float CarTopSpeedReverse {get;set;}= 20f;
+        public float CarTopSpeedReverse = 20f;
         [Min(0f)]
-        [SerializeField] public float BrakeTorque {get;set;} = 2000f;
-        [SerializeField] public AnimationCurve MotorCurve;// {get;set;}
+        public float BrakeTorque = 2000f;
+        public AnimationCurve MotorCurve;// {get;set;}
 
         [Header("CenterOfMass")]
         float centreOfGravityOffset = -1;
