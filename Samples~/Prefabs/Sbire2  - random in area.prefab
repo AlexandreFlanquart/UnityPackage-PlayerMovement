@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 1493203825966377887}
   - component: {fileID: 6991460241987569986}
   - component: {fileID: 7774063965343427852}
+  - component: {fileID: 5931847201847362019}
+  - component: {fileID: 4823019823741092847}
   m_Layer: 0
   m_Name: Sbire2  - random in area
   m_TagString: Untagged
@@ -171,3 +173,39 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 2}
   m_Direction: 0
+--- !u!95 &5931847201847362019
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1666286499369425755}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6dafd8ba24b3ab4469e10414fda974f5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage:
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4823019823741092847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1666286499369425755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f7e1a4c8b2d6e9f0a5c7b3d1e8f2a6c, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  moveXParam: MoveX
+  moveYParam: MoveY
+  speedParam: Speed
