@@ -1,3 +1,4 @@
+using MyUnityPackage.Toolkit;
 using UnityEngine;
 
 namespace MyUnityPackage.Controller
@@ -10,10 +11,14 @@ namespace MyUnityPackage.Controller
 
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(IPlayerMovement))]
-    public class PlayerController2D : MonoBehaviour
+    public class PlayerController2D : MonoBehaviour, IMovementControl
     {
+        // Squared velocity below which the player is considered idle (~0.01 units/s).
+        private const float MovingEpsilonSqr = 0.0001f;
+
         private IPlayerMovement input;
         private Rigidbody2D rb;
+        private bool movementEnabled = true;
 
         [Header("Movement Settings")]
         [SerializeField] private float baseSpeed = 5f;
@@ -46,7 +51,7 @@ namespace MyUnityPackage.Controller
         {
             if (input == null)
             {
-                Debug.LogError("Input source does not implement IPlayerInput.");
+                MUPLogger.Error("Input source does not implement IPlayerMovement.", this);
                 return;
             }
 
@@ -72,6 +77,13 @@ namespace MyUnityPackage.Controller
 
         private void FixedUpdate()
         {
+            // Frozen: keep the player still and ignore movement input.
+            if (!movementEnabled)
+            {
+                rb.linearVelocity = Vector2.zero;
+                return;
+            }
+
             float speed = baseSpeed;
 
             if (IsSprinting)
@@ -82,6 +94,39 @@ namespace MyUnityPackage.Controller
 
             Vector2 velocity = moveInput.normalized * speed;
             rb.linearVelocity = velocity;
+        }
+
+        // ---- IMovementControl -----------------------------------------
+
+        /// <inheritdoc />
+        public bool MovementEnabled => movementEnabled;
+
+        /// <inheritdoc />
+        public bool IsMoving => rb != null && rb.linearVelocity.sqrMagnitude > MovingEpsilonSqr;
+
+        /// <inheritdoc />
+        public void SetMovementEnabled(bool enabled)
+        {
+            if (movementEnabled == enabled)
+                return;
+
+            movementEnabled = enabled;
+
+            if (!enabled)
+                Stop();
+        }
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// The buffered <c>moveInput</c> is intentionally kept: the Input System only sends
+        /// events on value changes, so clearing it would leave a held key ignored after
+        /// <see cref="SetMovementEnabled"/> is set back to <c>true</c>. The <c>movementEnabled</c>
+        /// gate in <see cref="FixedUpdate"/> already zeroes the velocity every tick while disabled.
+        /// </remarks>
+        public void Stop()
+        {
+            if (rb != null)
+                rb.linearVelocity = Vector2.zero;
         }
 
         // Input Handlers ------------------------------------------

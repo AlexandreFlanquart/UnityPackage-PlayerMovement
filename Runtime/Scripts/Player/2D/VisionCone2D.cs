@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using MyUnityPackage.Toolkit;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -18,7 +20,7 @@ namespace MyUnityPackage.Controller
         [SerializeField, Range(1f, 360f)] private float angle = 90f;
         [Tooltip("Number of triangles in the cone mesh. More triangles = smoother cone and more precise vision, but more raycasts and worse performance.")]
         [SerializeField, Min(3)] private int triangles = 30; 
-        [Tooltip("Delay between raycasts in seconds. Longer delay = better performance but less responsive vision.")]
+        [Tooltip("Delay between raycasts in seconds. Longer delay = better performance but less responsive vision. Cached when the component is enabled; disable/enable to apply runtime changes.")]
         [SerializeField] private float delayBetweenRays = 0.1f;
 
         [Header("Masks")]
@@ -36,6 +38,12 @@ namespace MyUnityPackage.Controller
         // Public read-only: was target hit by any ray this frame?
         public bool TargetVisible { get; private set; }
         public Transform LastSeenTarget { get; private set; }
+
+        /// <summary>Raised once when a target becomes visible (TargetVisible false→true). Passes the seen transform.</summary>
+        public event Action<Transform> OnTargetSpotted;
+
+        /// <summary>Raised once when the target stops being visible (true→false), including when the cone is disabled while a target was visible.</summary>
+        public event Action OnTargetLost;
 
         private MeshFilter _meshFilter;
         private Mesh _mesh;
@@ -64,15 +72,44 @@ namespace MyUnityPackage.Controller
         private void OnDisable()
         {
             StopAllCoroutines();
+
+            // Don't leave listeners believing a target is still visible.
+            if (TargetVisible)
+            {
+                TargetVisible = false;
+                LastSeenTarget = null;
+                OnTargetLost?.Invoke();
+            }
         }
 
        IEnumerator UpdatingVision()
         {
+            // Cached once per enable to avoid a per-iteration allocation.
+            WaitForSeconds wait = new WaitForSeconds(delayBetweenRays);
+
             while (true)
             {
+                bool wasVisible = TargetVisible;
+
                 UpdateFacing();
                 BuildMesh();
-                yield return new WaitForSeconds(delayBetweenRays); // Update after all movement/physics is done, so rays are cast in the right direction.
+
+                // Edge-triggered detection events (no per-frame spam).
+                if (TargetVisible != wasVisible)
+                {
+                    if (TargetVisible)
+                    {
+                        MUPLogger.Info("VisionCone2D: target spotted.", this);
+                        OnTargetSpotted?.Invoke(LastSeenTarget);
+                    }
+                    else
+                    {
+                        MUPLogger.Info("VisionCone2D: target lost.", this);
+                        OnTargetLost?.Invoke();
+                    }
+                }
+
+                yield return wait;
             }
         }
 

@@ -1,43 +1,33 @@
-using MyUnityPackage.Toolkit;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace MyUnityPackage.Controller
 {
     /// <summary>
-    /// Drives a 2D Animator from a NavMeshAgent's desired velocity.
-    /// Mirrors PlayerAnimator2D but reads NavMeshAgent.desiredVelocity instead of Rigidbody2D.linearVelocity.
+    /// Drives a 2D Animator from a <see cref="NavMeshAgent"/>'s desired velocity. Same behaviour
+    /// as <see cref="PlayerAnimator2D"/> but reads the agent instead of a Rigidbody2D. Direction
+    /// snapping is handled by the base <see cref="DirectionalAnimator2D"/>.
+    /// The agent may live on this GameObject or on a parent (visual-child setups where the root
+    /// carries the NavMeshAgent at the feet and the sprite/Animator sit on an offset child).
     /// </summary>
     [RequireComponent(typeof(Animator))]
-    [RequireComponent(typeof(NavMeshAgent))]
-    public class IAAnimator2D : MonoBehaviour
+    public class IAAnimator2D : DirectionalAnimator2D
     {
-        [Header("Animator parameter names")]
-        [SerializeField] private string moveXParam = "MoveX";
-        [SerializeField] private string moveYParam = "MoveY";
-        [SerializeField] private string speedParam = "Speed";
+        private NavMeshAgent agent;
 
-        private Animator _animator;
-        private NavMeshAgent _agent;
-        private Vector2 _lastMoveDirection = Vector2.down;
-
-        private void Awake()
+        protected override void Awake()
         {
-            _animator = GetComponent<Animator>();
-            _agent = GetComponent<NavMeshAgent>();
+            base.Awake();
+            agent = GetComponentInParent<NavMeshAgent>();
         }
 
-        private void Update()
+        protected override Vector2 ReadVelocity()
         {
-            Vector2 velocity = new Vector2(_agent.desiredVelocity.x, _agent.desiredVelocity.y);
-            float speed = velocity.magnitude;
+            if (agent == null)
+                return Vector2.zero;
 
-            if (speed > 0.01f)
-                _lastMoveDirection = velocity.normalized;
-
-            _animator.SetFloat(moveXParam, _lastMoveDirection.x);
-            _animator.SetFloat(moveYParam, _lastMoveDirection.y);
-            _animator.SetFloat(speedParam, speed);
+            Vector3 desired = agent.desiredVelocity;
+            return new Vector2(desired.x, desired.y);
         }
     }
 }

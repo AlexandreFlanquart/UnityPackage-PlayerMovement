@@ -6,14 +6,14 @@ namespace MyUnityPackage.Controller
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(NavMeshAgent))]
-    public sealed class IAController2D : MonoBehaviour
+    public sealed class IAController2D : MonoBehaviour, IMovementControl
     {
         public enum NextPointMode { Random, Path }
         public enum PathMode { Loop, PingPong }
 
         [Header("Main")]
         [SerializeField] private NextPointMode nextPointMode = NextPointMode.Random;
-        [Tooltip("Optional collider defining the patrol area. If assigned, random points will be generated within its bounds.")]
+        [Tooltip("Optional collider restricting random patrol points. Assign a scene collider on the placed instance — a prefab asset cannot reference scene objects. Candidates are generated within the random radius around the agent, then rejected if outside this zone.")]
         [SerializeField] private Collider2D patrolZone;
 
         [Tooltip("Min wait time after reaching a target. Set to 0 for no wait.")]
@@ -26,7 +26,7 @@ namespace MyUnityPackage.Controller
         [SerializeField, Min(0.1f)] private float randomRadiusMax = 6f;
         [SerializeField, Min(0.1f)] private float randomRadiusMin = 1f;
 
-        [Tooltip("Max distance allowed to \"snap\" the random candidate onto the NavMesh")]       
+        [Tooltip("Max distance allowed to \"snap\" the random candidate onto the NavMesh")]
         [SerializeField, Min(0.1f)] private float sampleRadius = 1.0f;
 
         [Tooltip("Number of attempts to find a valid random point each time we need one. More attempts = better chance to find a point, but worse performance.")]
@@ -38,15 +38,21 @@ namespace MyUnityPackage.Controller
         [Tooltip("When using a path, defines how the agent moves through the points.")]
         [SerializeField] private PathMode pathMode = PathMode.Loop;
 
+        // Squared velocity below which the agent is considered idle (~0.01 units/s).
+        private const float MovingEpsilonSqr = 0.0001f;
+
+        // Distance below which a destination is considered reached.
+        private const float ReachedThreshold = 0.15f;
+
         private NavMeshAgent _agent;
 
+        private bool _movementEnabled = true;  // when false, patrol is frozen (see IMovementControl)
+        private bool _needsDestination;        // deferred: pick a destination once the agent is valid
         private float _waitTimer;      // time left before picking the next destination
         private bool _waiting;         // true when we reached a destination and are waiting
 
-        private int _index = -1;            // current waypoint index
+        private int _index = -1;       // current waypoint index
         private int _dir = 1;          // pingpong direction
-        private Vector3 _lastPosition;    // last frame position
-        //private float stuckTimer = 0f;
 
         private void Awake()
         {
@@ -62,14 +68,25 @@ namespace MyUnityPackage.Controller
         {
             _waiting = false;
             _waitTimer = 0f;
-            _lastPosition = transform.position;
-            PickNextDestination();
+            // The agent may not be on the NavMesh yet; defer the first destination to Update
+            // (which is guarded by isOnNavMesh) instead of touching the agent here.
+            _needsDestination = true;
         }
 
         private void Update()
         {
             if (!_agent.isOnNavMesh)
                 return;
+
+            // Frozen (e.g. during a dialogue): do not patrol or pick new destinations.
+            if (!_movementEnabled)
+                return;
+
+            if (_needsDestination)
+            {
+                AcquireDestination();
+                return;
+            }
 
             // If we are waiting, count down and pick when done.
             if (_waiting)
@@ -79,36 +96,15 @@ namespace MyUnityPackage.Controller
                 {
                     MUPLogger.Info("Wait over, picking next destination.");
                     _waiting = false;
-                    PickNextDestination();
+                    AcquireDestination();
                 }
                 return;
             }
-      
-            if (HasReachedDestination(_agent, 0.15f))
+
+            if (HasReachedDestination(_agent, ReachedThreshold))
             {
                 MUPLogger.Info("Reached destination, starting wait.");
                 StartWait();
-            }
-            else
-            {/*
-                // If agent has a path but barely moves for a while, consider it stuck.
-                if (_agent.hasPath && !_agent.pathPending)
-                {
-                    float moved = (transform.position - _lastPosition).sqrMagnitude;
-
-                    if (moved < 0.0009f) stuckTimer += Time.deltaTime;
-                    else stuckTimer = 0f;
-                    MUPLogger.Info($"Agent moved {moved}, stuck timer at {stuckTimer}s.", this);
-                    _lastPosition = transform.position;
-
-                    if (stuckTimer > 2f)
-                    {
-                        stuckTimer = 0f;
-                        PickNextDestination(); 
-                        MUPLogger.Warning("Agent was stuck, picking new destination.", this);
-                    }
-                }
-                */
             }
         }
 
@@ -131,6 +127,15 @@ namespace MyUnityPackage.Controller
             _waiting = true;
         }
 
+        // Picks the next destination and makes sure the agent is allowed to move toward it
+        // (clearing a lingering isStopped left by a previous Stop()).
+        private void AcquireDestination()
+        {
+            _needsDestination = false;
+            _agent.isStopped = false;
+            PickNextDestination();
+        }
+
         private void PickNextDestination()
         {
             if (nextPointMode == NextPointMode.Path)
@@ -148,13 +153,13 @@ namespace MyUnityPackage.Controller
                 return;
             }
 
-            GetNextIndex();
+            _index = NextIndex(_index, points.Length, pathMode, ref _dir);
 
             // Skip null entries (simple safety)
             int safety = 0;
             while (safety < points.Length && points[_index] == null)
             {
-                GetNextIndex();
+                _index = NextIndex(_index, points.Length, pathMode, ref _dir);
                 safety++;
             }
 
@@ -170,31 +175,37 @@ namespace MyUnityPackage.Controller
             _agent.SetDestination(target);
         }
 
-        private void GetNextIndex()
+        /// <summary>
+        /// Pure waypoint index stepper. <paramref name="pointCount"/> &lt;= 0 returns -1; a single
+        /// point always returns 0; out-of-range indices are clamped back into range. A seed of -1
+        /// yields the first waypoint (index 0) for both modes.
+        /// </summary>
+        internal static int NextIndex(int currentIndex, int pointCount, PathMode mode, ref int pingPongDirection)
         {
-            if (points.Length <= 1) return;
-            if (pathMode == PathMode.PingPong)
-            {
-                _index += _dir;
+            if (pointCount <= 0)
+                return -1;
+            if (pointCount == 1)
+                return 0;
 
-                if (_index >= points.Length)
-                {
-                    _index = points.Length - 2;
-                    _dir = -1;
-                }
-                else if (_index < 0)
-                {
-                    _index = 1;
-                    _dir = 1;
-                }
-            }
-            else // Loop
+            if (mode == PathMode.PingPong)
             {
-                _index++;
-                if (_index >= points.Length)
-                    _index = 0;
+                int next = currentIndex + pingPongDirection;
+                if (next >= pointCount)
+                {
+                    next = pointCount - 2;
+                    pingPongDirection = -1;
+                }
+                else if (next < 0)
+                {
+                    next = 1;
+                    pingPongDirection = 1;
+                }
+                return next;
             }
-            MUPLogger.Info($"New path index is {_index}.");
+
+            // Loop
+            int incremented = currentIndex + 1;
+            return (incremented >= pointCount || incremented < 0) ? 0 : incremented;
         }
 
         private void PickRandomPoint()
@@ -229,6 +240,47 @@ namespace MyUnityPackage.Controller
                     return;
             }
             MUPLogger.Warning("Failed to find a valid random destination for IAController2D.");
+            _agent.ResetPath();
+        }
+
+        // ---- IMovementControl -----------------------------------------
+
+        /// <inheritdoc />
+        public bool MovementEnabled => _movementEnabled;
+
+        /// <inheritdoc />
+        public bool IsMoving => _agent != null && _agent.hasPath && _agent.velocity.sqrMagnitude > MovingEpsilonSqr;
+
+        /// <inheritdoc />
+        public void SetMovementEnabled(bool enabled)
+        {
+            if (_movementEnabled == enabled)
+                return;
+
+            _movementEnabled = enabled;
+
+            if (!enabled)
+                Stop();
+            else
+                // Resume patrolling; deferred so it works even if the agent is briefly off-mesh.
+                _needsDestination = true;
+        }
+
+        /// <summary>
+        /// Interrupts the current path immediately. While movement stays enabled the agent
+        /// resumes patrol after its normal wait; use <see cref="SetMovementEnabled"/> with
+        /// <c>false</c> for a durable freeze.
+        /// </summary>
+        public void Stop()
+        {
+            _waiting = false;
+            _waitTimer = 0f;
+            _needsDestination = false;
+
+            if (_agent == null || !_agent.isOnNavMesh)
+                return;
+
+            _agent.isStopped = true;
             _agent.ResetPath();
         }
 

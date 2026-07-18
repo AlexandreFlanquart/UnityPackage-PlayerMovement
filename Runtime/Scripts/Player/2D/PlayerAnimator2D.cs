@@ -3,72 +3,59 @@ using UnityEngine;
 
 namespace MyUnityPackage.Controller
 {
+    /// <summary>
+    /// Drives the 2D player Animator from a <see cref="Rigidbody2D"/>'s velocity, and exposes
+    /// the sprint/crouch state to the animator. Direction snapping is handled by the base
+    /// <see cref="DirectionalAnimator2D"/>.
+    /// </summary>
     [RequireComponent(typeof(Animator))]
-    public class PlayerAnimator2D : MonoBehaviour
+    public class PlayerAnimator2D : DirectionalAnimator2D
     {
         [Header("References")]
         [SerializeField] private PlayerController2D controller;
         [SerializeField] private Rigidbody2D rb;
 
-        [Header("Animator parameter names")]
-        [SerializeField] private string moveXParam = "MoveX";
-        [SerializeField] private string moveYParam = "MoveY";
-        [SerializeField] private string speedParam = "Speed";
+        [Header("State parameter names")]
         [SerializeField] private string isSprintingParam = "IsSprinting";
         [SerializeField] private string isCrouchingParam = "IsCrouching";
 
-        private Animator animator;
-        private Vector2 lastMoveDirection = Vector2.down; // default facing down
+        private int isSprintingHash;
+        private int isCrouchingHash;
 
-        private void Awake()
+        protected override void Awake()
         {
-            animator = GetComponent<Animator>();
+            base.Awake();
 
             if (rb == null)
             {
                 rb = GetComponent<Rigidbody2D>();
-                MUPLogger.Error("PlayerAnimator2D: No Rigidbody2D reference found.", this);
+                if (rb == null)
+                    MUPLogger.Error("PlayerAnimator2D: no Rigidbody2D assigned and none found on this GameObject.", this);
             }
 
             if (controller == null)
             {
                 controller = GetComponent<PlayerController2D>();
-                MUPLogger.Error("PlayerAnimator2D: No PlayerController2D reference found.", this);
+                if (controller == null)
+                    MUPLogger.Error("PlayerAnimator2D: no PlayerController2D assigned and none found on this GameObject.", this);
             }
 
+            isSprintingHash = UnityEngine.Animator.StringToHash(isSprintingParam);
+            isCrouchingHash = UnityEngine.Animator.StringToHash(isCrouchingParam);
         }
 
-        private void Update()
+        protected override Vector2 ReadVelocity()
         {
-            UpdateMovementAnimation();
-            UpdateStateAnimation();
+            return rb != null ? rb.linearVelocity : Vector2.zero;
         }
 
-        private void UpdateMovementAnimation()
-        {
-            // Use velocity to drive movement animation.
-            Vector2 velocity = rb != null ? rb.linearVelocity : Vector2.zero;
-            float speed = velocity.magnitude;
-
-            // If the player is moving, update facing direction
-            if (speed > 0.01f)
-            {
-                lastMoveDirection = velocity.normalized;
-            }
-
-            // Set directional parameters (for 2D blend tree)
-            animator.SetFloat(moveXParam, lastMoveDirection.x);
-            animator.SetFloat(moveYParam, lastMoveDirection.y);
-            animator.SetFloat(speedParam, speed);
-        }
-
-        private void UpdateStateAnimation()
+        protected override void ApplyExtraParameters()
         {
             if (controller == null)
                 return;
 
-            animator.SetBool(isSprintingParam, controller.IsSprintingPublic);
-            animator.SetBool(isCrouchingParam, controller.IsCrouchingPublic);
+            Animator.SetBool(isSprintingHash, controller.IsSprintingPublic);
+            Animator.SetBool(isCrouchingHash, controller.IsCrouchingPublic);
         }
     }
 }
