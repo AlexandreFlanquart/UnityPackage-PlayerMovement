@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6861195173031146291}
   - component: {fileID: 1389720021602290626}
   - component: {fileID: 4749329402496634376}
+  - component: {fileID: 7376770350596548994}
   m_Layer: 0
   m_Name: Sbire1 - Path
   m_TagString: Untagged
@@ -44,12 +45,12 @@ NavMeshAgent:
   m_GameObject: {fileID: 2013011755331260001}
   m_Enabled: 1
   m_AgentTypeID: -1372625422
-  m_Radius: 0.53
+  m_Radius: 0.2
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_StoppingDistance: 0.2
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -71,8 +72,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nextPointMode: 1
   patrolZone: {fileID: 0}
-  waitMin: 0
-  waitMax: 0
+  waitMin: 0.5
+  waitMax: 2
   randomRadiusMax: 6
   randomRadiusMin: 1
   sampleRadius: 5
@@ -83,6 +84,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   pathMode: 1
+  randomizeAvoidancePriority: 1
+  stuckTimeout: 1.5
 --- !u!70 &4749329402496634376
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -120,6 +123,33 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 1}
   m_Size: {x: 1, y: 2}
   m_Direction: 0
+--- !u!50 &7376770350596548994
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2013011755331260001}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &5725468991168913249
 GameObject:
   m_ObjectHideFlags: 0

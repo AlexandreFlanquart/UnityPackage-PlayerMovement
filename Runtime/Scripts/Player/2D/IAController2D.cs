@@ -38,11 +38,25 @@ namespace MyUnityPackage.Controller
         [Tooltip("When using a path, defines how the agent moves through the points.")]
         [SerializeField] private PathMode pathMode = PathMode.Loop;
 
+        [Header("Anti-Stuck")]
+        [Tooltip("Randomize the NavMeshAgent avoidance priority on Awake so two agents never tie when avoiding each other (equal priorities can deadlock face-to-face agents). Disable if you assign explicit priorities.")]
+        [SerializeField] private bool randomizeAvoidancePriority = true;
+
+        [Tooltip("Seconds without actual movement (while pathing) before the agent is considered stuck and unsticks itself. 0 disables the watchdog.")]
+        [SerializeField, Min(0f)] private float stuckTimeout = 1.5f;
+
         // Squared velocity below which the agent is considered idle (~0.01 units/s).
         private const float MovingEpsilonSqr = 0.0001f;
 
         // Distance below which a destination is considered reached.
         private const float ReachedThreshold = 0.15f;
+
+        // Avoidance priority range used when randomizeAvoidancePriority is enabled.
+        private const int AvoidancePriorityMin = 30;
+        private const int AvoidancePriorityMax = 70;
+
+        // Actual speed (units/s) below which the agent counts as motionless for the stuck watchdog.
+        private const float StuckMinSpeed = 0.05f;
 
         private NavMeshAgent _agent;
 
@@ -50,6 +64,9 @@ namespace MyUnityPackage.Controller
         private bool _needsDestination;        // deferred: pick a destination once the agent is valid
         private float _waitTimer;      // time left before picking the next destination
         private bool _waiting;         // true when we reached a destination and are waiting
+
+        private float _stuckTimer;     // time spent (almost) motionless while pathing
+        private Vector3 _lastPosition; // position last frame, for actual-displacement detection
 
         private int _index = -1;       // current waypoint index
         private int _dir = 1;          // pingpong direction
@@ -62,12 +79,19 @@ namespace MyUnityPackage.Controller
             _agent.updateRotation = false;
             _agent.updateUpAxis = false;
             _agent.angularSpeed = 0f;
+
+            // Equal priorities make RVO avoidance symmetric: two converging agents can block
+            // each other forever. Randomizing breaks the tie so one of them yields.
+            if (randomizeAvoidancePriority)
+                _agent.avoidancePriority = Random.Range(AvoidancePriorityMin, AvoidancePriorityMax + 1);
         }
 
         private void OnEnable()
         {
             _waiting = false;
             _waitTimer = 0f;
+            _stuckTimer = 0f;
+            _lastPosition = transform.position;
             // The agent may not be on the NavMesh yet; defer the first destination to Update
             // (which is guarded by isOnNavMesh) instead of touching the agent here.
             _needsDestination = true;
@@ -105,11 +129,18 @@ namespace MyUnityPackage.Controller
             {
                 MUPLogger.Info("Reached destination, starting wait.");
                 StartWait();
+                return;
             }
+
+            UpdateStuckWatchdog();
         }
 
         bool HasReachedDestination(NavMeshAgent agent, float threshold)
         {
+            // remainingDistance is meaningless while the path is still being computed.
+            if (agent.pathPending)
+                return false;
+
             if (agent.remainingDistance > Mathf.Max(agent.stoppingDistance, threshold))
                 return false;
 
@@ -125,6 +156,40 @@ namespace MyUnityPackage.Controller
             MUPLogger.Info("Starting wait timer.");
             _waitTimer = Random.Range(waitMin, waitMax);
             _waiting = true;
+            _stuckTimer = 0f;
+        }
+
+        // Detects an agent kept motionless by other agents (RVO deadlock) and unsticks it.
+        // Uses actual displacement, not desiredVelocity: a blocked agent still "wants" to move.
+        private void UpdateStuckWatchdog()
+        {
+            Vector3 pos = transform.position;
+
+            if (stuckTimeout <= 0f || _agent.pathPending || !_agent.hasPath)
+            {
+                _stuckTimer = 0f;
+                _lastPosition = pos;
+                return;
+            }
+
+            float minStep = StuckMinSpeed * Time.deltaTime;
+            bool moved = (pos - _lastPosition).sqrMagnitude > minStep * minStep;
+            _lastPosition = pos;
+            _stuckTimer = moved ? 0f : _stuckTimer + Time.deltaTime;
+
+            float tolerance = BlockedArrivalTolerance(_agent.stoppingDistance, ReachedThreshold, _agent.radius);
+            switch (EvaluateStuck(_stuckTimer, stuckTimeout, _agent.remainingDistance, tolerance))
+            {
+                case StuckResolution.TreatAsArrived:
+                    MUPLogger.Info($"Stuck near destination (remaining {_agent.remainingDistance:F2} <= tolerance {tolerance:F2}), treating as arrived.", this);
+                    StartWait();
+                    break;
+                case StuckResolution.Repath:
+                    MUPLogger.Info("Stuck en route, picking a new destination.", this);
+                    _stuckTimer = 0f;
+                    _needsDestination = true;
+                    break;
+            }
         }
 
         // Picks the next destination and makes sure the agent is allowed to move toward it
@@ -132,6 +197,8 @@ namespace MyUnityPackage.Controller
         private void AcquireDestination()
         {
             _needsDestination = false;
+            _stuckTimer = 0f;
+            _lastPosition = transform.position;
             _agent.isStopped = false;
             PickNextDestination();
         }
@@ -208,6 +275,32 @@ namespace MyUnityPackage.Controller
             return (incremented >= pointCount || incremented < 0) ? 0 : incremented;
         }
 
+        internal enum StuckResolution { NotStuck, TreatAsArrived, Repath }
+
+        /// <summary>
+        /// Pure stuck-decision rule. A non-positive <paramref name="stuckTimeout"/> disables the
+        /// watchdog. Once the timer reaches the timeout: within tolerance of the destination the
+        /// agent counts as arrived (patrol continues), otherwise it should re-pick a destination.
+        /// An infinite remaining distance (invalid/partial path) therefore resolves to Repath.
+        /// </summary>
+        internal static StuckResolution EvaluateStuck(float stuckTimer, float stuckTimeout, float remainingDistance, float blockedArrivalTolerance)
+        {
+            if (stuckTimeout <= 0f || stuckTimer < stuckTimeout)
+                return StuckResolution.NotStuck;
+
+            return remainingDistance <= blockedArrivalTolerance
+                ? StuckResolution.TreatAsArrived
+                : StuckResolution.Repath;
+        }
+
+        /// <summary>
+        /// Distance from the destination under which a blocked agent counts as arrived: the normal
+        /// arrival band plus two agent radii (a same-size blocker camped on the destination keeps
+        /// the remaining distance plateaued at roughly two radii).
+        /// </summary>
+        internal static float BlockedArrivalTolerance(float stoppingDistance, float reachedThreshold, float agentRadius)
+            => Mathf.Max(stoppingDistance, reachedThreshold) + 2f * agentRadius;
+
         private void PickRandomPoint()
         {
             Vector3 origin = transform.position;
@@ -275,6 +368,7 @@ namespace MyUnityPackage.Controller
         {
             _waiting = false;
             _waitTimer = 0f;
+            _stuckTimer = 0f;
             _needsDestination = false;
 
             if (_agent == null || !_agent.isOnNavMesh)

@@ -60,6 +60,8 @@ One prefab per 2D movement type (under `Samples/Prefabs/`):
 | `Sbire1 - Path` | AI patrol along waypoints (`IAController2D`) | `Loop` or `PingPong` |
 | `Sbire2 - RandomRadius` | AI random points around itself | No zone constraint |
 | `Sbire3 - RandomZone` | AI random points inside a zone | **Assign `patrolZone` on the scene instance** (a prefab asset cannot reference a scene collider) |
+| `Sbire4 - VisionCone` | AI random patrol + a `VisionCone2D` child | Detects `targetMask` layers; raises `OnTargetSpotted`/`OnTargetLost` |
+| `Player - Hybrid` | Runtime switch between click-to-move and WASD/ZQSD (`MovementModeSwitcher2D`) | Press **Space** to toggle; see below |
 
 Helper prefabs (drop into a scene):
 - **`PlayerInputManager`** — required **once per scene**; the singleton that owns `PlayerControls`.
@@ -107,6 +109,31 @@ Component-complete prefabs still need scene-level setup:
    ground, and set the prefab's `groundMask` to it, otherwise clicks detect nothing.
 5. **Sbire1 - Path**: place waypoint Transforms and assign them to its `points` array.
    **Sbire3 - RandomZone**: assign a `patrolZone` collider on the instance.
+
+### Switching movement mode at runtime (`Player - Hybrid`)
+`MovementModeSwitcher2D` lets a single GameObject carry both movement stacks
+(`ClickToMoveController2D` + `NavMeshAgent` and `PlayerController2D` + a dynamic `Rigidbody2D`)
+and switch between them without collision glitches or the player falling off the NavMesh:
+
+```csharp
+var switcher = playerGameObject.GetComponent<MovementModeSwitcher2D>();
+switcher.ToggleMode();                                             // or SetMode(...)
+bool ok = switcher.SetMode(MovementModeSwitcher2D.MovementMode.ClickToMove);
+switcher.OnModeChanged += mode => { /* ... */ };
+switcher.OnModeRefused += mode => { /* no NavMesh under the player */ };
+```
+
+- Entering **Direct** mode stops the NavMesh path, disables the agent, and switches the
+  `Rigidbody2D` to **Dynamic** (gravity/rotation are forced off regardless of the prefab).
+- Entering **ClickToMove** mode samples the NavMesh around the player first — if nothing is
+  found within `maxSnapRadius`, the switch is **refused** (`OnModeRefused`, current mode kept);
+  otherwise the `Rigidbody2D` goes **Kinematic** and `NavMeshAgent.Warp` places the agent back
+  on the mesh in the same frame.
+- Also swaps which `DirectionalAnimator2D` (`PlayerAnimator2D` / `IAAnimator2D`) drives the
+  shared `Animator`, and implements `IMovementControl` itself (delegating to the active
+  controller) so a freeze (`SetMovementEnabled(false)`) survives a mode switch.
+- Bound to **Space** by default (`toggleOnJump`) — that input is otherwise unused by both 2D
+  controllers.
 
 ### Animation (4 / 8 directions)
 2D animators derive from **`DirectionalAnimator2D`**, which writes a facing direction to the

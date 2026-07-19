@@ -44,6 +44,17 @@ namespace MyUnityPackage.Controller
             isCrouchingHash = UnityEngine.Animator.StringToHash(isCrouchingParam);
         }
 
+        // Another animator source may take over the shared Animator (e.g. a movement-mode
+        // switch): these bools are owned by this component, don't leave a stale pose behind.
+        private void OnDisable()
+        {
+            if (Animator != null)
+            {
+                Animator.SetBool(isSprintingHash, false);
+                Animator.SetBool(isCrouchingHash, false);
+            }
+        }
+
         protected override Vector2 ReadVelocity()
         {
             return rb != null ? rb.linearVelocity : Vector2.zero;
