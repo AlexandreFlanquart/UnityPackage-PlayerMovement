@@ -129,7 +129,6 @@ MonoBehaviour:
   m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
-  m_Version: 2
   m_TaaSettings:
     m_Quality: 3
     m_FrameInfluence: 0.1
@@ -137,6 +136,7 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+  m_Version: 2
 --- !u!1 &7981372985855353552
 GameObject:
   m_ObjectHideFlags: 0
@@ -154,7 +154,7 @@ GameObject:
   - component: {fileID: 5919440978063156905}
   - component: {fileID: 4350039426282851586}
   m_Layer: 0
-  m_Name: Player2D
+  m_Name: Player - ZQSD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -170,14 +170,15 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.377, y: -0.668, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 8, y: 8, z: 8}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1919151608731294963}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7731785624694826388
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -196,6 +197,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -217,9 +220,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 3
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 505019949, guid: fd94e05449185b5499f984e76a349895, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -229,7 +234,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!114 &575830772609646246
 MonoBehaviour:
@@ -243,11 +247,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49101b4dd3927ab469343696a98b02e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 5919440978063156905}
-  rb: {fileID: 6840177038779822707}
   moveXParam: MoveX
   moveYParam: MoveY
   speedParam: Speed
+  directionMode: 2
+  controller: {fileID: 5919440978063156905}
+  rb: {fileID: 6840177038779822707}
   isSprintingParam: IsSprinting
   isCrouchingParam: IsCrouching
 --- !u!95 &7058131858963384488
@@ -328,8 +333,8 @@ MonoBehaviour:
   sprintMultiplier: 1.5
   crouchMode: 1
   crouchMultiplier: 0.5
---- !u!58 &4350039426282851586
-CircleCollider2D:
+--- !u!70 &4350039426282851586
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -362,5 +367,6 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.12410855}
-  m_Radius: 0.035188437
+  m_Offset: {x: -0.0012720376, y: -0.1157579}
+  m_Size: {x: 0.068959266, y: 0.068959266}
+  m_Direction: 0

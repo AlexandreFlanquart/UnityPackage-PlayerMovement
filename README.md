@@ -55,7 +55,7 @@ One prefab per 2D movement type (under `Samples/Prefabs/`):
 
 | Prefab | Movement | Notes |
 |---|---|---|
-| `Player2D` | WASD/ZQSD (`PlayerController2D`, Rigidbody2D) | Sprint/crouch Hold or Toggle |
+| `Player - ZQSD` | WASD/ZQSD (`PlayerController2D`, Rigidbody2D) | Sprint/crouch Hold or Toggle |
 | `Player - ClickToMove` | Click / tap to move (`ClickToMoveController2D`, NavMeshAgent) | Mouse, touch and pen; now animated |
 | `Sbire1 - Path` | AI patrol along waypoints (`IAController2D`) | `Loop` or `PingPong` |
 | `Sbire2 - RandomRadius` | AI random points around itself | No zone constraint |
@@ -98,7 +98,7 @@ project once (this is a project setting, not something the package can ship):
 ### Building a scene — manual wiring
 Component-complete prefabs still need scene-level setup:
 1. Add the **`PlayerInputManager`** prefab (once).
-2. **Player2D** brings its own camera. **`Player - ClickToMove`** also ships one but **disabled by
+2. **`Player - ZQSD`** brings its own camera. **`Player - ClickToMove`** also ships one but **disabled by
    default** (to avoid fighting an existing scene camera / duplicate AudioListener) — enable its
    `Main Camera` child only in scenes that have no camera; otherwise keep your scene camera
    tagged **MainCamera** (the controller reads `Camera.main`).
@@ -146,6 +146,13 @@ The `DirectionMode` field controls snapping: `Free` (no snapping), `Snap4` (card
 Unity's docs prescribe for one motion per direction). For an **8-direction** setup, add diagonal
 clips as blend-tree children at `(±0.71, ±0.71)` and set `DirectionMode = Snap8` — the quantizer
 already emits those exact unit diagonals. `Speed` stays continuous in every mode.
+
+The shared `PlayerAnimation2D` controller is **already wired for 8 directions**: each blend tree
+(`Idle`/`Walk`/`Run`) carries the four diagonal children at `(±0.71, ±0.71)`, and `Player - ZQSD`
+ships with `DirectionMode = Snap8`. Those diagonals currently **reuse the left/right clips as
+placeholders** — replace the four diagonal motions with dedicated diagonal art when you have it
+(the positions are already correct, so nothing else changes). The other prefabs stay on their
+current mode; flip their `DirectionMode` to `Snap8` to opt in.
 
 Notes: the `IsCrouching` animator parameter is declared but not used by any transition yet
 (reserved — wire it up if you add crouch clips). The sample states run at `Speed 0.1` to slow

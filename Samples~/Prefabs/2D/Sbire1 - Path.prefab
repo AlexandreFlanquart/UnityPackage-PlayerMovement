@@ -28,9 +28,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2013011755331260001}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.699997, y: -1.2299957, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_LocalScale: {x: 8, y: 8, z: 8}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2627768217689229285}
@@ -45,7 +45,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 2013011755331260001}
   m_Enabled: 1
   m_AgentTypeID: -1372625422
-  m_Radius: 0.2
+  m_Radius: 0.04
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -54,9 +54,9 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2.02
+  m_Height: 0.08
   m_BaseOffset: 0
-  m_WalkableMask: 9
+  m_WalkableMask: 1
   m_ObstacleAvoidanceType: 4
 --- !u!114 &1389720021602290626
 MonoBehaviour:
@@ -83,7 +83,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  pathMode: 1
+  - {fileID: 0}
+  pathMode: 0
   randomizeAvoidancePriority: 1
   stuckTimeout: 1.5
 --- !u!70 &4749329402496634376
@@ -120,8 +121,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 1}
-  m_Size: {x: 1, y: 2}
+  m_Offset: {x: -0.0012720376, y: 0.03344728}
+  m_Size: {x: 0.068959266, y: 0.068959266}
   m_Direction: 0
 --- !u!50 &7376770350596548994
 Rigidbody2D:
@@ -178,7 +179,7 @@ Transform:
   m_GameObject: {fileID: 5725468991168913249}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0.164, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -231,10 +232,10 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 3
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: bd3cb4af8406d4436a2ae8c2aafe1f8d, type: 3}
-  m_Color: {r: 0, g: 0.26123428, b: 1, a: 1}
+  m_Sprite: {fileID: 1890826861, guid: a1c80fc8a266a2847807b3c8f9c0cda9, type: 3}
+  m_Color: {r: 0.122, g: 0.467, b: 0.706, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
