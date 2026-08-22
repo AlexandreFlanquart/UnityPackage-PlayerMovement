@@ -17,12 +17,8 @@ namespace MyUnityPackage.Controller
     [RequireComponent(typeof(NavMeshAgent))]
     public class ClickToMoveController2D : MonoBehaviour, IPlayerController2D
     {
-        [Tooltip("2D ground layers used for the click raycast")]
-        [SerializeField] private LayerMask groundMask = ~0;
         [Tooltip("Max distance allowed to \"snap\" the click point onto the NavMesh")]
         [SerializeField] private float sampleRadius = 1.0f;
-        [Tooltip("Max ray length used to raycast the click against 2D ground colliders")]
-        [SerializeField] private float rayDistance = 100f;
         [Tooltip("Optional: raised (in addition to the C# event) when a path completes naturally")]
         [SerializeField] private UnityEvent onDestinationReachedEvent;
 
@@ -101,17 +97,13 @@ namespace MyUnityPackage.Controller
             if (agent == null || !agent.isOnNavMesh)
                 return;
 
-            // Convert the screen position into a world-space ray
-            Ray ray = mainCamera.ScreenPointToRay(screenPos);
-            RaycastHit2D hit2D = Physics2D.GetRayIntersection(ray, rayDistance, groundMask);
+            // Orthographic camera + flat world (z=0): the point under the click is a direct read,
+            // no physics involved. The NavMesh alone decides what's reachable.
+            Vector3 world = mainCamera.ScreenToWorldPoint(screenPos);
+            world.z = 0f;
 
-            // No ground collider under the click: ignore it. RaycastHit2D.point defaults to (0,0)
-            // on a miss, which previously sent the agent walking toward the world origin.
-            if (hit2D.collider == null)
-                return;
-
-            // Snap the hit point onto the NavMesh and move the agent
-            if (NavMesh.SamplePosition(hit2D.point, out NavMeshHit navHit, sampleRadius, agent.areaMask))
+            // Snap the point onto the NavMesh and move the agent
+            if (NavMesh.SamplePosition(world, out NavMeshHit navHit, sampleRadius, agent.areaMask))
             {
                 agent.isStopped = false;
                 agent.SetDestination(navHit.position);
