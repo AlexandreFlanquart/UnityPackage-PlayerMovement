@@ -1,3 +1,11 @@
+## [1.0.5] - 2026-08-22
+### Changed
+- `ClickToMoveController2D` no longer raycasts against a `groundMask` layer to resolve a click. With an orthographic camera and a flat (z=0) world, the click's world position is read directly via `ScreenToWorldPoint` and handed straight to `NavMesh.SamplePosition` — the NavMesh alone decides what's reachable.
+### Why
+- The raycast depended on a `Ground`-layer collider under every clickable surface, which consuming projects had to build and maintain for no purpose other than resolving clicks. Removing it drops that dependency entirely; a click now resolves the same way whether or not the surface under it has a collider.
+### Removed
+- `groundMask` and `rayDistance` serialized fields on `ClickToMoveController2D`. Existing prefab overrides for them become inert (Unity silently ignores unknown serialized properties) — no migration needed.
+
 ## [1.0.4] - 2026-07-18
 ### Added
 - Generic runtime control contract `IMovementControl` (`SetMovementEnabled`, `Stop`, `MovementEnabled`, `IsMoving`), implemented by `ClickToMoveController2D`, `PlayerController2D` and `IAController2D` — so game code can freeze/restore any mover (player or NPC).

@@ -103,11 +103,10 @@ Component-complete prefabs still need scene-level setup:
    `Main Camera` child only in scenes that have no camera; otherwise keep your scene camera
    tagged **MainCamera** (the controller reads `Camera.main`).
 3. For click-to-move / sbires: add the **`NavMeshSurface2D`** prefab and **Bake**. Put the walkable
-   ground under 2D colliders.
-4. **Ground layer**: `Player - ClickToMove`'s `groundMask` targets a layer named **"Ground"** (layer 9
-   in this project). In a fresh project this layer won't exist — create a layer, assign it to your
-   ground, and set the prefab's `groundMask` to it, otherwise clicks detect nothing.
-5. **Sbire1 - Path**: place waypoint Transforms and assign them to its `points` array.
+   ground under 2D colliders. No ground collider layer needs to be set up for clicks themselves —
+   `ClickToMoveController2D` reads the click's world position directly (orthographic camera, flat
+   world) and hands it to `NavMesh.SamplePosition`; the baked NavMesh alone decides what's reachable.
+4. **Sbire1 - Path**: place waypoint Transforms and assign them to its `points` array.
    **Sbire3 - RandomZone**: assign a `patrolZone` collider on the instance.
 
 ### Switching movement mode at runtime (`Player - Hybrid`)
